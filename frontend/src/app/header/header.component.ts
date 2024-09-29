@@ -9,13 +9,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  isOpen: boolean = false; // Biến để kiểm soát trạng thái mở/đóng của sidebar
+  isNavbarOpen = false; // Trạng thái của menu
 
-  toggleSidebar() {
-    this.isOpen = !this.isOpen; // Đảo ngược trạng thái
-  }
-
-  closeSidebar() {
-    this.isOpen = false; // Đóng sidebar
+  toggleNavbar() {
+    this.isNavbarOpen = !this.isNavbarOpen; // Đổi trạng thái mở/đóng menu
   }
 }

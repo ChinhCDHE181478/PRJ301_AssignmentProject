@@ -1,99 +1,60 @@
-nav{
-    position: fixed;
-    display: flex;
-    align-items: center;
-    top: 0;
-    left: 0;
-    height: 70px;
-    width: 100%;
-    background: #fff;
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+.web-name{
+    padding-left: 2%;
+    padding-right: 2%;
 }
-nav .logo{
-    display: flex;
-    align-items: center;
-    margin: 0 24px;
+/* Cách đều các mục chữ */
+.navbar-nav .nav-item {
+    margin-right: 2%; /* Tạo khoảng cách giữa các mục */
 }
-.logo .menu-icon{
-    color: #333;
-    font-size: 24px;
-    margin-right: 14px;
-    cursor: pointer;
+.menu-bar-content{
+    margin-left: 2%;
 }
-.logo .logo-name{
-    color: #333;
-    font-size: 22px;
-    font-weight: 500;
-}
-nav .sidebar{
-    position: fixed;
-    top: 0;
-    left: -100%;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-    opacity: 1;
-    height: 100%;
-    width: 260px;
-    background-color: #fff;
-    padding: 20px 0;
-    transition: all 0.3s ease;
-}
-nav.open .sidebar{
-    left: 0;
-}
-.sidebar .sidebar-content{
-    display: flex;
-    padding: 30px 16px;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 95%;
-}
-.sidebar-content .list{
-    list-style: none;
-}
-.list .nav-link{
-    display: flex;
-    align-items: center;
-    padding: 14px 12px;
-    border-radius: 8px;
-    text-decoration: none;
-}
-.nav-link .icon{
-    margin-right: 14px;
-    font-size: 20px;
-    color: #707070;
-}
-.nav-link:hover {
-    background-color: #4070f4;
+/* Đưa mục "Log Out" ra cuối dòng */
+.navbar-nav {
+    display: flex; /* Sử dụng flexbox để căn chỉnh */
+    align-items: center; /* Căn giữa các mục theo chiều dọc */
+    justify-content: space-between; /* Phân chia khoảng cách giữa các mục */
+    width: 100%; /* Đảm bảo chiều rộng bao phủ toàn bộ navbar */
 }
 
-.nav-link .link{
-    font-size: 16px;
-    color: #707070;
-    font-weight: 400;
+.navbar-nav .nav-item:last-child {
+    margin-left: auto; /* Đẩy mục "Log Out" về cuối dòng */
 }
-.nav-link:hover .icon,
-.nav-link:hover .link{
-    color: #fff;
+
+/* Di chuyển nút menu sang bên trái trên màn hình nhỏ */
+@media (max-width: 992px) {
+    .navbar {
+        display: flex;
+        justify-content: flex-start; /* Đảm bảo các phần tử xếp từ trái sang phải */
+        align-items: center; /* Căn giữa theo chiều dọc */
+    }
+
+    .navbar-toggler {
+        order: -1; /* Đưa nút menu ra ngoài cùng bên trái */
+        margin-right: 10px; /* Tạo khoảng cách giữa nút menu và phần chữ Inventory Management */
+    }
+
+    .navbar-brand {
+        margin-left: 20px; /* Tạo khoảng cách giữa nút menu và chữ Inventory Management */
+    }
+    /* Đảm bảo các mục menu căn trái */
+    .navbar-nav .nav-item {
+        text-align: left; /* Đẩy text sát bên trái */
+        width: 100%; /* Đảm bảo menu chiếm toàn bộ chiều rộng */
+        margin-left: 5%;
+    }
+
+    .navbar-nav .nav-item:last-child {
+        margin-left: 5%; /* Đẩy mục "Log Out" về cuối dòng */
+    }
+
+    .navbar-collapse {
+        display: none; /* Mặc định ẩn menu */
+    }
+    
+    .navbar-collapse.show {
+        display: block; /* Hiển thị menu khi được mở */
+    }
+
 }
-.lists{
-    padding-left: 0;
-}
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.3);
-    opacity: 0; /* Mặc định là ẩn */
-    visibility: hidden; /* Không hiển thị */
-    z-index: 2000;
-    transition: opacity 0.3s ease, visibility 0.4s ease; /* Chuyển tiếp cho opacity và visibility */
-}
-.overlay.show {
-    opacity: 1; /* Hiển thị khi có lớp 'show' */
-    visibility: visible; /* Cho phép hiển thị */
-}
-nav{
-    z-index: 3000;
-}
+

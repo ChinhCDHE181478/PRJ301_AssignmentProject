@@ -1,0 +1,106 @@
+<div class="home-page">
+    <div>
+        <app-header></app-header>
+    </div>
+    
+    <div class="container-fluid table-container">
+        <div class="row justify-content-center"> <!-- Thêm class justify-content-center -->
+        
+            <div class="col-md-10"> <!-- Thêm một cột để giới hạn chiều rộng bảng -->
+                <div style="font-size: 25px; font-weight: bolder; text-align: center; margin-bottom: 20px;">Production Plans</div>
+                <div class="button-container">
+                    <button class="btn-custom" (click)="toggleAddModal()">Add</button>
+                    <button class="btn-custom" (click)="toggleSearchModal()">Search</button>
+                    <button class="btn-custom" (click)="viewAll()">View All</button>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr class="table-header">
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Start</th>
+                            <th>End</th>
+                            <th>Department</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                        <!-- Dữ liệu sẽ được chèn vào đây -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Record Modal -->
+    <div class="modal" [ngClass]="{'show': isAddModalOpen}" id="addModal" *ngIf="isAddModalOpen">
+        <div class="modal-content">
+            <span class="close" (click)="toggleAddModal()">&times;</span>
+            <h3>Add Record</h3>
+            <form (ngSubmit)="addRecord()">
+                <div class="form-group">
+                    <label for="addID">ID</label>
+                    <input type="text" id="addID" [(ngModel)]="addID" name="addID" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="addName">Name</label>
+                    <input type="text" id="addName" [(ngModel)]="addName" name="addName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="addStart">Start</label>
+                    <input type="date" id="addStart" [(ngModel)]="addStart" name="addStart" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="addEnd">End</label>
+                    <input type="date" id="addEnd" [(ngModel)]="addEnd" name="addEnd" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="addDepartment">Department</label>
+                    <input type="text" id="addDepartment" [(ngModel)]="addDepartment" name="addDepartment" class="form-control" required>
+                </div>
+                <div class="form-buttons" style="margin-top: 10px;">
+                    <button type="submit" class="btn-custom">Add</button>
+                    <button type="button" class="btn-custom" (click)="toggleAddModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Search -->
+    <div class="modal" [ngClass]="{'show': isSearchModalOpen}" id="searchModal">
+        <div class="modal-content">
+            <span class="close" (click)="toggleSearchModal()">&times;</span>
+            <h3>Search Records</h3>
+            <form (submit)="performSearch()">
+                <div class="form-group">
+                    <label for="searchID">ID</label>
+                    <input type="text" id="searchID" [(ngModel)]="searchID" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="searchName">Name</label>
+                    <input type="text" id="searchName" [(ngModel)]="searchName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="searchStart">Start</label>
+                    <input type="date" id="searchStart" [(ngModel)]="searchStart" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="searchEnd">End</label>
+                    <input type="date" id="searchEnd" [(ngModel)]="searchEnd" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="searchDepartment">Department</label>
+                    <input type="text" id="searchDepartment" [(ngModel)]="searchDepartment" class="form-control">
+                </div>
+                <div class="form-buttons" style="margin-top: 10px;">
+                    <button type="submit" class="btn-custom">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div>
+        <app-footer></app-footer>
+    </div>
+</div>
