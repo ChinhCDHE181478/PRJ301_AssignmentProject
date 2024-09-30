@@ -44,28 +44,45 @@
                             <!-- Dữ liệu sẽ được chèn vào đây -->
                         </tbody>
                     </table>
+                    <table class="table plan-campaign">
+                        <thead>
+                            <tr class="table-header">
+                                <th>Schedule ID</th>
+                                <th>Campaign ID</th>
+                                <th>Date</th>
+                                <th>Shift Name</th>
+                                <th>Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body plan-campaign-body">
+                            <!-- Dữ liệu sẽ được chèn vào đây -->
+                        </tbody>
+                    </table>
                 </div>
-                
+
                 <div>
                     <button class="btn-custom" (click)="toggleSearchInTableModal()">Search in This Table</button>
                 </div>
 
-                <table class="table">
-                    <thead>
-                        <tr class="table-header">
-                            <th>No.</th>
-                            <th>ID</th>
-                            <th>Campaign ID</th>
-                            <th>Date</th>
-                            <th>Shift Name</th>
-                            <th>Quantity</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-body">
-                        <!-- Dữ liệu sẽ được chèn vào đây -->
-                    </tbody>
-                </table>
+                <div>
+                    <table class="table">
+                        <thead>
+                            <tr class="table-header">
+                                <th>No.</th>
+                                <th>Work ID</th>
+                                <th>Schedule ID</th>
+                                <th>Employee ID</th>
+                                <th>Employee Name</th>
+                                <th>Quantity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-body">
+                            <!-- Dữ liệu sẽ được chèn vào đây -->
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
@@ -77,20 +94,16 @@
             <h3>Add Record</h3>
             <form (ngSubmit)="addRecord()">
                 <div class="form-group">
-                    <label for="addID">ID</label>
-                    <input type="text" id="addID" [(ngModel)]="addID" name="addID" class="form-control" required>
+                    <label for="addScheduleID">Schedule ID</label>
+                    <input type="text" id="addScheduleID" [(ngModel)]="addScheduleID" name="addScheduleID" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="addCampaignID">Campaign ID</label>
-                    <input type="text" id="addCampaignID" [(ngModel)]="addCampaignID" name="addCampaignID" class="form-control" required>
+                    <label for="addEmployeeID">Employee ID</label>
+                    <input type="text" id="addEmployeeID" [(ngModel)]="addEmployeeID" name="addEmployeeID" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="addDate">Date</label>
-                    <input type="date" id="addDate" [(ngModel)]="addDate" name="addDate" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="addShiftName">Shift Name</label>
-                    <input type="text" id="addShiftName" [(ngModel)]="addShiftName" name="addShiftName" class="form-control" required>
+                    <label for="addEmployeeName">Employee Name</label>
+                    <input type="text" id="addEmployeeName" [(ngModel)]="addEmployeeName" name="addEmployeeName" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="addQuantity">Quantity</label>
@@ -104,27 +117,23 @@
         </div>
     </div>
 
-    <!-- Modal Search -->
+    <!-- Search Modal -->
     <div class="modal" [ngClass]="{'show': isSearchModalOpen}" id="searchModal">
         <div class="modal-content">
             <span class="close" (click)="toggleSearchModal()">&times;</span>
             <h3>Search Records</h3>
             <form (submit)="performSearch()">
                 <div class="form-group">
-                    <label for="searchID">ID</label>
-                    <input type="text" id="searchID" [(ngModel)]="searchID" class="form-control">
+                    <label for="searchScheduleID">Schedule ID</label>
+                    <input type="text" id="searchScheduleID" [(ngModel)]="searchScheduleID" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="searchCampaignID">Campaign ID</label>
-                    <input type="text" id="searchCampaignID" [(ngModel)]="searchCampaignID" class="form-control">
+                    <label for="searchEmployeeID">Employee ID</label>
+                    <input type="text" id="searchEmployeeID" [(ngModel)]="searchEmployeeID" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="searchDate">Date</label>
-                    <input type="date" id="searchDate" [(ngModel)]="searchDate" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="searchShiftName">Shift Name</label>
-                    <input type="text" id="searchShiftName" [(ngModel)]="searchShiftName" class="form-control">
+                    <label for="searchEmployeeName">Employee Name</label>
+                    <input type="text" id="searchEmployeeName" [(ngModel)]="searchEmployeeName" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="searchQuantity">Quantity</label>
@@ -137,30 +146,27 @@
         </div>
     </div>
 
+    <!-- Search in Table Modal -->
     <div class="modal" [ngClass]="{'show': isSearchInTableModalOpen}" id="searchInTableModal" *ngIf="isSearchInTableModalOpen">
         <div class="modal-content">
             <span class="close" (click)="toggleSearchInTableModal()">&times;</span>
             <h3>Search in This Table</h3>
             <form (ngSubmit)="performSearchInTable()">
                 <div class="form-group">
-                    <label for="searchCampaignIDTable">Campaign ID</label>
-                    <input type="text" id="searchCampaignIDTable" [(ngModel)]="searchInTableCampaignID" name="searchCampaignIDTable" class="form-control" required>
+                    <label for="searchScheduleIDTable">Schedule ID</label>
+                    <input type="text" id="searchScheduleIDTable" [(ngModel)]="searchInTableScheduleID" name="searchScheduleIDTable" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="searchPlanIDTable">Plan ID</label>
-                    <input type="text" id="searchPlanIDTable" [(ngModel)]="searchInTablePlanID" name="searchPlanIDTable" class="form-control">
+                    <label for="searchEmployeeIDTable">Employee ID</label>
+                    <input type="text" id="searchEmployeeIDTable" [(ngModel)]="searchInTableEmployeeID" name="searchEmployeeIDTable" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="searchProductTable">Product</label>
-                    <input type="text" id="searchProductTable" [(ngModel)]="searchInTableProduct" name="searchProductTable" class="form-control">
+                    <label for="searchEmployeeNameTable">Employee Name</label>
+                    <input type="text" id="searchEmployeeNameTable" [(ngModel)]="searchInTableEmployeeName" name="searchEmployeeNameTable" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="searchQuantityTable">Quantity</label>
                     <input type="number" id="searchQuantityTable" [(ngModel)]="searchInTableQuantity" name="searchQuantityTable" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="searchUnitEffortTable">Unit Effort(days)</label>
-                    <input type="number" id="searchUnitEffortTable" [(ngModel)]="searchInTableUnitEffort" name="searchUnitEffortTable" class="form-control">
                 </div>
                 <div class="form-buttons" style="margin-top: 10px;">
                     <button type="submit" class="btn-custom">Search</button>

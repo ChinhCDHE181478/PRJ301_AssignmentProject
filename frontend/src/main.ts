@@ -7,6 +7,7 @@ import { LoginComponent } from './app/login/login.component';
 import { AccountManagermentComponent } from './app/account-managerment/account-managerment.component';
 import { PlanCampaignsComponent } from './app/plan-campaigns/plan-campaigns.component';
 import { ScheduleCampaignsComponent } from './app/schedule-campaigns/schedule-campaigns.component';
+import { WorkerSchedulesComponent } from './app/worker-schedules/worker-schedules.component';
 
-bootstrapApplication(ProductionPlansComponent, appConfig)
+bootstrapApplication(WorkerSchedulesComponent, appConfig)
   .catch((err) => console.error(err));
