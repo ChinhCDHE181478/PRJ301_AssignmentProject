@@ -2,5 +2,16 @@ spring:
   application:
     name: backend
 
+  datasource:
+    url: jdbc:sqlserver://localhost\SQLEXPRESS:1433;database=DB_Production;encrypt=false;trustServerCertificate=true;
+    username: sa
+    password: 123
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
 server:
   port: 8080
