@@ -21,17 +21,29 @@
                             <th>Employee ID</th>
                             <th>Role</th>
                             <th>Status</th>
-                            <th>Actions</th> <!-- Cột cuối để trống -->
+                            <th>Actions</th> 
                         </tr>
                     </thead>
                     <tbody class="table-body">
-                        <!-- Dữ liệu sẽ được chèn vào đây -->
+                        <tr>
+                            <td>1</td>
+                            <td>123</td>
+                            <td>JohnDoe</td>
+                            <td>*****</td>
+                            <td>5678</td>
+                            <td>Admin</td>
+                            <td>Active</td>
+                            <td>
+                                <button class="action-edit-unique" (click)="openEditModal()">Edit</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
+    <!-- add modal -->
     <div class="modal" [ngClass]="{'show': isAddModalOpen}">
         <div class="modal-content">
             <span class="close" (click)="closeAddModal()">&times;</span>
@@ -87,6 +99,39 @@
             </form>
         </div>
     </div>
+
+    <!-- edit modal -->
+    <div class="modal" [ngClass]="{'show': isEditModalOpen}">
+    <div class="modal-content">
+        <span class="close" (click)="closeEditModal()">&times;</span>
+        <h3>Edit User Information</h3>
+        <form (submit)="saveEdit()">
+            <div class="form-group">
+                <label for="editUsername">Username</label>
+                <input type="text" id="editUsername" [(ngModel)]="selectedUser.username" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editPassword">Password</label>
+                <input type="password" id="editPassword" [(ngModel)]="selectedUser.password" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editEmployeeId">Employee ID</label>
+                <input type="text" id="editEmployeeId" [(ngModel)]="selectedUser.employeeId" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editRole">Role</label>
+                <input type="text" id="editRole" [(ngModel)]="selectedUser.role" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="editStatus">Status</label>
+                <input type="text" id="editStatus" [(ngModel)]="selectedUser.status" class="form-control">
+            </div>
+            <div class="form-buttons">
+                <button type="submit" style="margin-top: 10px;" class="btn-custom">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 
     <div>

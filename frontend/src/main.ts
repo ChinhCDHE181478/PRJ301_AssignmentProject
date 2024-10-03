@@ -10,5 +10,5 @@ import { ScheduleCampaignsComponent } from './app/schedule-campaigns/schedule-ca
 import { WorkerSchedulesComponent } from './app/worker-schedules/worker-schedules.component';
 import { AttendentComponent } from './app/attendent/attendent.component';
 
-bootstrapApplication(AttendentComponent, appConfig)
+bootstrapApplication(AccountManagermentComponent, appConfig)
   .catch((err) => console.error(err));

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="fa5f95a6-7cb5-446e-9952-37655f7ada49" name="sqlserver@localhost\MSSQLSERVER Mapping">
+      <data-sources db="8b8f0776-0404-4daa-967c-2d5025d410c6" />
+    </mapping>
+  </component>
+</project>

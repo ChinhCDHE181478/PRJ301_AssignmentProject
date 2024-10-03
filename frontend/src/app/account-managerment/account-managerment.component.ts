@@ -11,7 +11,9 @@ import { CommonModule } from '@angular/common';
   templateUrl: './account-managerment.component.html',
   styleUrl: './account-managerment.component.scss'
 })
+
 export class AccountManagermentComponent {
+
   isAddModalOpen = false;
   isSearchModalOpen = false;
   newUser = {
@@ -56,4 +58,26 @@ export class AccountManagermentComponent {
     console.log('Search params:', this.searchParams);
     this.closeSearchModal();
   }
+
+  isEditModalOpen = false; // Điều khiển mở/đóng modal
+    selectedUser = { username: '', password: '', employeeId: '', role: '', status: '' }; // Dữ liệu người dùng được chọn
+
+    // Hàm mở modal
+    openEditModal(): void {
+         // Lấy thông tin người dùng được chọn để chỉnh sửa
+        this.isEditModalOpen = true;
+    }
+
+    // Hàm đóng modal
+    closeEditModal(): void {
+        this.isEditModalOpen = false;
+    }
+
+    // Hàm lưu thay đổi khi chỉnh sửa
+    saveEdit(): void {
+        // Xử lý lưu thay đổi dữ liệu
+        console.log('User data:', this.selectedUser);
+        this.isEditModalOpen = false;
+    }
+
 }

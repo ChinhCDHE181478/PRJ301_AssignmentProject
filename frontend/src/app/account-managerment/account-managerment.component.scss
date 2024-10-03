@@ -108,6 +108,14 @@ th, td {
     cursor: pointer;
 }
 
+.action-edit-unique, .action-view-unique {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0 5px;
+    transition: background-color 0.3s ease;
+}
+
 
 /* MEDIA QUERY cho màn hình nhỏ hơn */
 @media (max-width: 768px) {
