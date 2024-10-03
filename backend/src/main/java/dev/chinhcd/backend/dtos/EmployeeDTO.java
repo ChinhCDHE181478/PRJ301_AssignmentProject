@@ -1,16 +1,21 @@
 package dev.chinhcd.backend.dtos;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-public class EmployeeDTO {
-    @JsonProperty("Employee_ID")
-    private int employeeID;
+public record EmployeeDTO(
+        @NotBlank()
+        String employeeName,
+
+        @NotNull()
+        Integer roleId,
+
+        @NotNull()
+        Integer departmentId,
+
+        @NotNull()
+        Integer salaryLevel
+) {
+
 }

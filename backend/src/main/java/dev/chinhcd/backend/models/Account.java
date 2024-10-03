@@ -11,11 +11,12 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "User_ID")
-    private int userID;
+    private Integer userId;
 
     @Column(name = "Username")
     private String username;

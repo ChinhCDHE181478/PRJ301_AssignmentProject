@@ -1,7 +1,6 @@
 package dev.chinhcd.backend.models;
 
 import jakarta.persistence.*;
-import jdk.jfr.Name;
 import lombok.*;
 
 import java.util.Set;
@@ -16,8 +15,8 @@ import java.util.Set;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Role_iD")
-    private int roleID;
+    @Column(name = "Role_ID")
+    private Integer roleId;
 
     @Column(name = "Role_Name")
     private String roleName;

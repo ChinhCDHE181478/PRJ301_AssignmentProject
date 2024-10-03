@@ -11,12 +11,13 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "Features")
 public class Feature {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Feature_ID")
-    private int featureId;
+    private Integer featureId;
 
     @Column(name = "Feature_Name")
     private String featureName;

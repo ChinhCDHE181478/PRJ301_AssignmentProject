@@ -12,4 +12,5 @@ import lombok.*;
 public class ProductDTO {
     @NotEmpty(message = "Product name cannot be empty")
     private String name;
+
 }

@@ -10,24 +10,25 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Employee_ID")
-    private int employeeID;
+    private Integer employeeId;
 
     @Column(name = "Employee_Name")
     private String employeeName;
 
     @ManyToOne
     @JoinColumn(name = "Role_ID")
-    private dev.chinhcd.backend.models.Role role;
+    private Role role;
 
     @ManyToOne
     @JoinColumn(name = "Department_ID")
     private Department department;
 
     @Column(name = "Salary_Level")
-    private int Salary_Level;
+    private Integer salaryLevel;
 
 }
