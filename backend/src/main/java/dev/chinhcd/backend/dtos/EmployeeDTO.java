@@ -1,21 +1,15 @@
 package dev.chinhcd.backend.dtos;
 
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record EmployeeDTO(
-        @NotBlank()
+
+        @JsonProperty("Employee_Name")
         String employeeName,
 
-        @NotNull()
-        Integer roleId,
-
-        @NotNull()
-        Integer departmentId,
-
-        @NotNull()
-        Integer salaryLevel
+        @JsonProperty("Department_Name")
+        Integer departmentName
 ) {
 
 }

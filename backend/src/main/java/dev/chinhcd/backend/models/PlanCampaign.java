@@ -10,6 +10,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class PlanCampaign {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

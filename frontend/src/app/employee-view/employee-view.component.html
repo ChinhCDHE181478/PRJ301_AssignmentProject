@@ -1,0 +1,49 @@
+<div class="home-page">
+    <div>
+        <app-header></app-header>
+    </div>
+    
+    <div class="container-fluid table-container">
+        <div class="row justify-content-center"> <!-- Thêm class justify-content-center -->
+            <div class="col-md-10"> <!-- Thêm một cột để giới hạn chiều rộng bảng -->
+                <div style="font-size: 25px; font-weight: bolder; text-align: center; margin-bottom: 20px;">Account Managerment</div>
+                <div class="button-container">
+                    <button class="btn-custom" (click)="openSearchModal()">Search</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr class="table-header">
+                            <th>No.</th>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Employee ID</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th> 
+                        </tr>
+                    </thead>
+                    <tbody class="table-body">
+                        <tr>
+                            <td>1</td>
+                            <td>123</td>
+                            <td>JohnDoe</td>
+                            <td>*****</td>
+                            <td>5678</td>
+                            <td>Admin</td>
+                            <td>Active</td>
+                            <td>
+                                <button class="action-edit-unique" (click)="openEditModal()">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <app-footer></app-footer>
+    </div>
+
+</div>

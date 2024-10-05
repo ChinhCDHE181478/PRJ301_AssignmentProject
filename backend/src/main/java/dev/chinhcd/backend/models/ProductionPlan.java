@@ -12,6 +12,7 @@ import java.sql.Date;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ProductionPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

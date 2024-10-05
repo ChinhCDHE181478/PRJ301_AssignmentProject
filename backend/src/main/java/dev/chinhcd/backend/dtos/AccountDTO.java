@@ -1,17 +1,16 @@
 package dev.chinhcd.backend.dtos;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 public record AccountDTO(
-        @NotBlank(message = "username cannot be blank")
+        @JsonProperty("Username")
         String username,
 
-        @NotBlank(message = "password cannot be blank")
+        @JsonProperty("Password")
         String password,
 
-        @NotNull(message = "employee id cannot be null")
+        @JsonProperty("Employee_ID")
         Integer employeeId
 ) {
 

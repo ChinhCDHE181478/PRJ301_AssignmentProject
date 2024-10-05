@@ -1,5 +1,6 @@
 package dev.chinhcd.backend.repository;
 
+import dev.chinhcd.backend.dtos.EmployeeDTO;
 import dev.chinhcd.backend.models.Account;
 import dev.chinhcd.backend.models.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;

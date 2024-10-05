@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { HeaderComponent } from "../header/header.component";
 import { FooterComponent } from "../footer/footer.component";
 import { FormsModule } from "@angular/forms"
@@ -12,30 +12,64 @@ import { CommonModule } from '@angular/common';
   styleUrl: './account-managerment.component.scss'
 })
 
-export class AccountManagermentComponent {
+export class AccountManagermentComponent implements OnInit{
 
+  accounts: any[]|undefined;
+
+  ngOnInit() {
+    this.initializeAccounts();
+    console.log(this.accounts)
+  }
+
+  initializeAccounts() {
+    this.accounts = [
+      { username: 'JohnDoe', employeeId: 123, role: 'Admin', status: 'Active' },
+      { username: 'JaneDoe', employeeId: 456, role: 'User', status: 'Inactive' }
+    ];
+  }
+
+  openEditModal(account: any) {
+    // Logic để mở modal chỉnh sửa tài khoản
+    console.log(account);
+  }
+
+  //add model
   isAddModalOpen = false;
-  isSearchModalOpen = false;
+
   newUser = {
     username: '',
     password: '',
-    name: '',
+    employeeId: '',
     role: ''
   };
-  searchParams = {
-    id: '',
-    username: '',
-    name: ''
-  };
-
-  // Open and close modals
+  
   openAddModal() {
     this.isAddModalOpen = true;
   }
-
+  
   closeAddModal() {
     this.isAddModalOpen = false;
   }
+  
+  onUserChange(field: keyof typeof this.newUser, event: Event) {
+    const target = event.target as HTMLInputElement | HTMLSelectElement; // Ép kiểu target
+    this.newUser[field] = target.value;
+  }
+  
+  addUser() {
+    console.log('User added:', this.newUser);
+    this.closeAddModal();
+  }
+
+
+  //search modal
+  isSearchModalOpen = false;
+
+  searchParams = {
+    username: '',
+    employeeId: '',
+    role: ''
+  };
 
   openSearchModal() {
     this.isSearchModalOpen = true;
@@ -45,28 +79,19 @@ export class AccountManagermentComponent {
     this.isSearchModalOpen = false;
   }
 
-  // Add user function
-  addUser() {
-    // Logic to add user goes here
-    console.log('User added:', this.newUser);
-    this.closeAddModal();
+  onSearchChange(field: keyof typeof this.searchParams, event: Event) {
+    const target = event.target as HTMLInputElement | HTMLSelectElement; // Ép kiểu target
+    this.searchParams[field] = target.value; // Truy cập value
   }
 
-  // Search function
   performSearch() {
-    // Logic to search for users based on searchParams
     console.log('Search params:', this.searchParams);
     this.closeSearchModal();
   }
+  
 
   isEditModalOpen = false; // Điều khiển mở/đóng modal
     selectedUser = { username: '', password: '', employeeId: '', role: '', status: '' }; // Dữ liệu người dùng được chọn
-
-    // Hàm mở modal
-    openEditModal(): void {
-         // Lấy thông tin người dùng được chọn để chỉnh sửa
-        this.isEditModalOpen = true;
-    }
 
     // Hàm đóng modal
     closeEditModal(): void {

@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class WorkerSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

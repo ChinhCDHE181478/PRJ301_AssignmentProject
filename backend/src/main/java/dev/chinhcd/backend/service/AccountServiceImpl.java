@@ -1,6 +1,7 @@
 package dev.chinhcd.backend.service;
 
 import dev.chinhcd.backend.dtos.AccountDTO;
+import dev.chinhcd.backend.dtos.EmployeeDTO;
 import dev.chinhcd.backend.models.Account;
 import dev.chinhcd.backend.models.Employee;
 import dev.chinhcd.backend.repository.AccountRepository;
@@ -32,37 +33,13 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public List<Account> getAccountByEmployee(Employee employee) {
-        return accountRepository.findAllByEmployee(employee);
+    public List<Account> getAllAccountbyAccountDto(AccountDTO accountDto) {
+        return List.of();
     }
 
     @Override
-    public Account getAccountByUsername(String username) {
-        return accountRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+    public void updateAccount(AccountDTO accountDto) {
+
     }
 
-    @Override
-    public Account getAccountById(Integer accountId) {
-        return accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
-    }
-
-    @Override
-    public Account updateAccount(Integer id, AccountDTO accountDto) {
-        var employee = employeeService.getEmployeeById(accountDto.employeeId());
-        var account = accountRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
-        account.setUsername(accountDto.username());
-        account.setPassword(accountDto.password());
-        account.setEmployee(employee);
-        return accountRepository.save(account);
-    }
-
-    @Override
-    public void deleteAccount(Integer accountId) {
-        var account = accountRepository.findById(accountId)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
-        accountRepository.delete(account);
-    }
 }

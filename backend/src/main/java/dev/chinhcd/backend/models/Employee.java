@@ -21,10 +21,6 @@ public class Employee {
     private String employeeName;
 
     @ManyToOne
-    @JoinColumn(name = "Role_ID")
-    private Role role;
-
-    @ManyToOne
     @JoinColumn(name = "Department_ID")
     private Department department;
 

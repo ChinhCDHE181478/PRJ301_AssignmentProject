@@ -1,6 +1,5 @@
 package dev.chinhcd.backend.service;
 
-import dev.chinhcd.backend.dtos.FeatureDTO;
 import dev.chinhcd.backend.models.Feature;
 import dev.chinhcd.backend.repository.FeatureRepository;
 import lombok.AllArgsConstructor;

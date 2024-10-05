@@ -3,6 +3,7 @@ package dev.chinhcd.backend.models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 @Data
@@ -11,6 +12,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +20,7 @@ public class Department {
     private Integer departmentId;
 
     @Column(name = "Department_Name")
+    @UniqueElements
     private String departmentName;
 
     @Column(name = "Department_Type")

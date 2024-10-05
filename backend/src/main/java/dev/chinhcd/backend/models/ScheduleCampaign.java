@@ -12,6 +12,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "Schedule_Campaigns")
+@Builder
 public class ScheduleCampaign {
     @Id
     @Column(name = "Schedule_ID")
