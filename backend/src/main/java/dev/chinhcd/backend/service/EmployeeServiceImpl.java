@@ -9,6 +9,7 @@ import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -23,28 +24,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<Employee> getEmployeesByEmployeeDtos(EmployeeDTO employeeDto) {
-
-        // Tạo một example để lọc các thuộc tính
-        ExampleMatcher matcher = ExampleMatcher.matchingAll()
-                .withIgnoreNullValues()
-                .withIgnoreCase()
-                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING); // Chấp nhận chuỗi chứa giá trị tìm kiếm
-
-        Employee employeeExample = Employee.builder()
-                .employeeId(null) // Sử dụng giá trị ID nếu có
-                .employeeName(employeeDto.employeeName() != null && !employeeDto.employeeName().isBlank() ? employeeDto.employeeName() : null) // Kiểm tra null hoặc rỗng
-                .department(employeeDto.departmentName())
-                .build();
-
-        // Tạo example dựa trên matcher
-        Example<Employee> example = Example.of(employeeExample, matcher);
-
-        // Tìm tất cả dựa trên example
-        return employeeRepository.findAll(example);
+        return List.of();
     }
 
     @Override
-    public Employee getEmployeeById(int id) {
-        return employeeRepository.findById(id).orElse(null);
+    public Optional<Employee> getEmployeeById(int id) {
+        return employeeRepository.getEmployeeByEmployeeId(id);
     }
+
 }

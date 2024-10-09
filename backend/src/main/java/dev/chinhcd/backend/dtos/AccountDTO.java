@@ -1,6 +1,9 @@
 package dev.chinhcd.backend.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.UniqueElements;
+
+import java.util.Set;
 
 
 public record AccountDTO(
@@ -11,7 +14,13 @@ public record AccountDTO(
         String password,
 
         @JsonProperty("Employee_ID")
-        Integer employeeId
+        Integer employeeId,
+
+        @JsonProperty("Role")
+        Set<String> role,
+
+        @JsonProperty("Status")
+        String status
 ) {
 
 }

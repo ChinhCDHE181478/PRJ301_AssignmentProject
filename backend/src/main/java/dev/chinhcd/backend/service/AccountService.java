@@ -1,17 +1,19 @@
 package dev.chinhcd.backend.service;
 
 import dev.chinhcd.backend.dtos.AccountDTO;
-import dev.chinhcd.backend.dtos.EmployeeDTO;
 import dev.chinhcd.backend.models.Account;
+import dev.chinhcd.backend.responses.AccountResponse;
 
 import java.util.List;
 
 public interface AccountService {
     Account createAccount(AccountDTO accountDto);
 
-    List<Account> getAllAccount();
+    List<AccountResponse> getAllAccount();
 
-    List<Account> getAllAccountbyAccountDto(AccountDTO accountDto);
+    List<AccountResponse> getAccountsbyAccountDto(AccountDTO accountDto);
 
     void updateAccount(AccountDTO accountDto);
+
+    boolean existsByUsername(String username);
 }

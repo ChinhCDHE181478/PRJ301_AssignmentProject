@@ -29,7 +29,7 @@ table {
 }
 
 th, td {
-    padding: 10px;
+    padding: 1% 1%;
     text-align: start;
     border: 1px solid rgba(90, 90, 90, 0.2);
 } 
@@ -116,6 +116,16 @@ th, td {
     transition: background-color 0.3s ease;
 }
 
+.modal-edit{
+    z-index: 999;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
 
 /* MEDIA QUERY cho màn hình nhỏ hơn */
 @media (max-width: 768px) {

@@ -16,11 +16,10 @@ import org.hibernate.validator.constraints.UniqueElements;
 public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Department_ID")
+    @Column(name = "Department_ID", nullable = false)
     private Integer departmentId;
 
     @Column(name = "Department_Name")
-    @UniqueElements
     private String departmentName;
 
     @Column(name = "Department_Type")

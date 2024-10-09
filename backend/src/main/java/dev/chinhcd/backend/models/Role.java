@@ -29,4 +29,7 @@ public class Role {
             inverseJoinColumns = @JoinColumn(name = "Feature_ID")
     )
     private Set<Feature> features;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<Account> accounts;
 }

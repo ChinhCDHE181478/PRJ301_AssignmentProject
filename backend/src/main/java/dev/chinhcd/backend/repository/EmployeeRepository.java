@@ -11,8 +11,5 @@ import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-
-    @Query("SELECT new dev.chinhcd.backend.dtos.EmployeeDTO(e.employeeId, e.employeeName, d.departmentName) " +
-            "FROM Employee e JOIN e.department d WHERE e.employeeId = :employeeId")
-    Optional<EmployeeDTO> findEmployeeWithDepartmentById(@Param("employeeId") Integer employeeId);
+    Optional<Employee> getEmployeeByEmployeeId(int id);
 }

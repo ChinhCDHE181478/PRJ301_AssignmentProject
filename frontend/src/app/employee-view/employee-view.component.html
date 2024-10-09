@@ -14,13 +14,9 @@
                     <thead>
                         <tr class="table-header">
                             <th>No.</th>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Password</th>
                             <th>Employee ID</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Actions</th> 
+                            <th>Name</th>
+                            <th>Department</th>
                         </tr>
                     </thead>
                     <tbody class="table-body">
@@ -28,17 +24,40 @@
                             <td>1</td>
                             <td>123</td>
                             <td>JohnDoe</td>
-                            <td>*****</td>
                             <td>5678</td>
-                            <td>Admin</td>
-                            <td>Active</td>
-                            <td>
-                                <button class="action-edit-unique" (click)="openEditModal()">Edit</button>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="modal" [ngClass]="{'show': isSearchModalOpen}">
+        <div class="modal-content">
+            <span class="close" (click)="closeSearchModal()">&times;</span>
+            <h3>Search User</h3>
+            <form (submit)="performSearch()">
+                <div class="form-group">
+                    <label for="searchUsername">Username</label>
+                    <input type="text" id="searchUsername" (input)="onSearchChange('username', $event)" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="searchEmployeeID">Employee ID</label>
+                    <input type="text" id="searchEmployeeID" (input)="onSearchChange('employeeId', $event)" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="searchRole">Role</label>
+                    <select id="searchRole" (change)="onSearchChange('role', $event)" class="form-control">
+                        <option value="">--Select Role--</option>
+                        <option value="Task Manager">Task Manager</option>
+                        <option value="Work Scheduler">Work Scheduler</option>
+                    </select>
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" style="margin-top: 10px;" class="btn-custom">Search</button>
+                </div>
+            </form>
         </div>
     </div>
 
