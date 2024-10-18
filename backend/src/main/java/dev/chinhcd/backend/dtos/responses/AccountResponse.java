@@ -1,12 +1,15 @@
-package dev.chinhcd.backend.dtos;
+package dev.chinhcd.backend.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.UniqueElements;
+import lombok.Builder;
 
 import java.util.Set;
 
+@Builder
+public record AccountResponse (
+        @JsonProperty("User_ID")
+        Integer Id,
 
-public record AccountDTO(
         @JsonProperty("Username")
         String username,
 
@@ -17,10 +20,9 @@ public record AccountDTO(
         Integer employeeId,
 
         @JsonProperty("Role")
-        Set<String> role,
+        Set<RoleResponse> role,
 
         @JsonProperty("Status")
         String status
 ) {
-
 }

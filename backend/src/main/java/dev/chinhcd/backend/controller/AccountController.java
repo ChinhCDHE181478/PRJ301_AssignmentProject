@@ -1,15 +1,13 @@
 package dev.chinhcd.backend.controller;
 
-import dev.chinhcd.backend.dtos.AccountDTO;
+import dev.chinhcd.backend.dtos.requests.AccountRequest;
 import dev.chinhcd.backend.models.Account;
-import dev.chinhcd.backend.responses.AccountResponse;
-import dev.chinhcd.backend.service.AccountService;
-import jakarta.validation.Valid;
+import dev.chinhcd.backend.dtos.responses.AccountResponse;
+import dev.chinhcd.backend.service.AccountServiceImpl;
+import dev.chinhcd.backend.service.InterfaceService.AccountService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,15 +16,12 @@ import java.util.List;
 @RequestMapping("api/v1/accounts")
 @AllArgsConstructor
 public class AccountController {
-    private final AccountService accountService;
+    private final AccountServiceImpl accountService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNewAccount(@RequestBody AccountDTO accountDTO) {
-        if(accountService.existsByUsername(accountDTO.username())){
-            return ResponseEntity.badRequest().body("This username is already in use");
-        }
+    public ResponseEntity<?> createNewAccount(@RequestBody AccountRequest accountRequest) {
         try {
-            Account account = accountService.createAccount(accountDTO);
+            Account account = accountService.createAccount(accountRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(account);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -39,17 +34,14 @@ public class AccountController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<AccountResponse>> searchAccount(AccountDTO accountDTO) {
-        return ResponseEntity.ok(accountService.getAccountsbyAccountDto(accountDTO));
+    public ResponseEntity<List<AccountResponse>> searchAccount(@RequestBody AccountRequest accountRequest) {
+        return ResponseEntity.ok(accountService.getAccountsbyAccountDto(accountRequest));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateAccount(@RequestBody AccountDTO accountDTO) {
-        if(!accountService.existsByUsername(accountDTO.username())){
-            return ResponseEntity.badRequest().body("This username is not exist");
-        }
+    public ResponseEntity<?> updateAccount(@RequestBody AccountRequest accountRequest) {
         try{
-            accountService.updateAccount(accountDTO);
+            accountService.updateAccount(accountRequest);
             return ResponseEntity.ok().body("Account updated successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

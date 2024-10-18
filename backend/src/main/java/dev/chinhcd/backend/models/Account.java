@@ -3,7 +3,8 @@ package dev.chinhcd.backend.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.util.Set;
 
@@ -34,7 +35,7 @@ public class Account {
     @Column(name = "Status")
     private String status;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "User_Role",
             joinColumns = @JoinColumn(name = "User_ID"),

@@ -22,9 +22,9 @@ public class Role {
     @Column(name = "Role_Name")
     private String roleName;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "Role_Features",
+            name = "Role_Feature",
             joinColumns = @JoinColumn(name = "Role_ID"),
             inverseJoinColumns = @JoinColumn(name = "Feature_ID")
     )

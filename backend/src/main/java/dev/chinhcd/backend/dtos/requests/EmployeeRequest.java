@@ -1,10 +1,9 @@
-package dev.chinhcd.backend.dtos;
+package dev.chinhcd.backend.dtos.requests;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.UniqueConstraint;
 
-public record EmployeeDTO(
+public record EmployeeRequest(
 
         @JsonProperty("Employee_ID")
         Integer id,
