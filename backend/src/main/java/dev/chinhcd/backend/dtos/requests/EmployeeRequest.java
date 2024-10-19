@@ -11,8 +11,8 @@ public record EmployeeRequest(
         @JsonProperty("Employee_Name")
         String employeeName,
 
-        @JsonProperty("Department_Name")
-        String departmentName
+        @JsonProperty("Department")
+        DepartmentRequest departmentRequest
 ) {
 
 }

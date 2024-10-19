@@ -5,16 +5,16 @@ import dev.chinhcd.backend.exceptions.DataNotFoundException;
 import dev.chinhcd.backend.models.Account;
 import dev.chinhcd.backend.dtos.responses.AccountResponse;
 
-import java.util.List;
+import java.util.Set;
 
 public interface AccountService {
     Account createAccount(AccountRequest accountRequest) throws DataNotFoundException;
 
-    List<AccountResponse> getAllAccount();
+    Set<AccountResponse> getAllAccount();
 
-    List<AccountResponse> getAccountsbyAccountDto(AccountRequest accountRequest);
+    Set<AccountResponse> getAccountsbyAccountDto(AccountRequest accountRequest);
 
-    void updateAccount(AccountRequest accountRequest) throws DataNotFoundException;
+    Account updateAccount(AccountRequest accountRequest) throws DataNotFoundException;
 
-    boolean existsByUsername(String username);
+    String login(String username, String password) throws DataNotFoundException;
 }

@@ -18,8 +18,8 @@ public record AccountRequest(
         @JsonProperty("Employee_ID")
         Integer employeeId,
 
-        @JsonProperty("Role")
-        Set<RoleRequest> role,
+        @JsonProperty("Roles")
+        Set<RoleRequest> roleRequests,
 
         @JsonProperty("Status")
         String status

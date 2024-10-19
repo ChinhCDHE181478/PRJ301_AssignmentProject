@@ -7,9 +7,9 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface RoleService {
-    Optional<Role> findByName(String name);
-
-    Set<Role> findBySetName(Set<String> name);
+    Set<RoleResponse> getAllRoles();
 
     Set<RoleResponse> findRoleByAccountId(Integer accountId);
+
+    Optional<Role> findRoleById(Integer roleId);
 }

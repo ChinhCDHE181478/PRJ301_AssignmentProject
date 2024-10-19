@@ -1,6 +1,7 @@
 package dev.chinhcd.backend.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dev.chinhcd.backend.models.Department;
 import lombok.Builder;
 
 @Builder
@@ -11,8 +12,8 @@ public record EmployeeResponse(
         @JsonProperty("Employee_Name")
         String employeeName,
 
-        @JsonProperty("Department_Name")
-        String departmentName
+        @JsonProperty("Department")
+        DepartmentResponse departmentResponse
 ) {
 
 }

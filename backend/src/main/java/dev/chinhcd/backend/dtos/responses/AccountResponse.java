@@ -19,8 +19,8 @@ public record AccountResponse (
         @JsonProperty("Employee_ID")
         Integer employeeId,
 
-        @JsonProperty("Role")
-        Set<RoleResponse> role,
+        @JsonProperty("Roles")
+        Set<RoleResponse> roleResponses,
 
         @JsonProperty("Status")
         String status

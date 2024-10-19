@@ -1,39 +1,75 @@
 package dev.chinhcd.backend.service;
 
+import dev.chinhcd.backend.dtos.requests.DepartmentRequest;
 import dev.chinhcd.backend.dtos.requests.EmployeeRequest;
 import dev.chinhcd.backend.dtos.responses.EmployeeResponse;
 import dev.chinhcd.backend.models.Department;
 import dev.chinhcd.backend.models.Employee;
-import dev.chinhcd.backend.repository.DepartmentRepository;
 import dev.chinhcd.backend.repository.EmployeeRepository;
 import dev.chinhcd.backend.service.InterfaceService.EmployeeService;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
+    EntityManager entityManager;
     private final EmployeeRepository employeeRepository;
     private final DepartmentServiceImpl departmentService;
 
 
     @Override
-    public List<EmployeeResponse> getAllEmployees() {
+    public Set<EmployeeResponse> getAllEmployees() {
         return employeeRepository.findAll().stream().map(employee -> EmployeeResponse.builder()
+                .id(employee.getEmployeeId())
                 .employeeName(employee.getEmployeeName())
-                .departmentName(employee.getDepartment().getDepartmentName())
-                .build()).collect(Collectors.toList());
+                .departmentResponse(departmentService.findById(employee.getDepartment().getDepartmentId()).orElse(null))
+                .build()).collect(Collectors.toSet());
     }
 
     @Override
-    public List<EmployeeResponse> getEmployeesByEmployeeDtos(EmployeeRequest employeeRequest) {
-        Optional<Department> d = departmentService.findByName(employeeRequest.departmentName());
-        return new ArrayList<EmployeeResponse>() {{}};
+    public Set<EmployeeResponse> getEmployeesByEmployeeDtos(EmployeeRequest employeeRequest) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> employee = query.from(Employee.class);
+
+        Join<Employee, Department> departmentJoin = employee.join("department", JoinType.LEFT);
+
+        Predicate predicate = cb.conjunction();
+
+        if (employeeRequest.employeeName() != null && !employeeRequest.employeeName().isBlank()) {
+            predicate = cb.and(predicate,
+                    cb.like(cb.lower(employee.get("employeeName")),
+                            "%" + employeeRequest.employeeName().toLowerCase() + "%"));
+        }
+
+        if(employeeRequest.departmentRequest() != null) {
+            DepartmentRequest departmentRequest = employeeRequest.departmentRequest();
+
+            if(departmentRequest.departmentName() != null && !departmentRequest.departmentName().isBlank()) {
+                predicate = cb.and(predicate,
+                        cb.like(cb.lower(departmentJoin.get("departmentName")), "%" + departmentRequest.departmentName().toLowerCase() + "%"));
+            }
+
+            if(departmentRequest.departmentType() != null && !departmentRequest.departmentType().isBlank()) {
+                predicate = cb.and(predicate,
+                        cb.like(cb.lower(departmentJoin.get("departmentType")), "%" + departmentRequest.departmentType().toLowerCase() + "%"));
+            }
+        }
+
+        query.where(predicate);
+        List<Employee> employees = entityManager.createQuery(query).getResultList();
+
+        return employees.stream().map(employeeMap -> EmployeeResponse.builder()
+                .id(employeeMap.getEmployeeId())
+                .employeeName(employeeMap.getEmployeeName())
+                .departmentResponse(departmentService.findById(employeeMap.getDepartment().getDepartmentId()).orElse(null))
+                .build()).collect(Collectors.toSet());
     }
 
     @Override
