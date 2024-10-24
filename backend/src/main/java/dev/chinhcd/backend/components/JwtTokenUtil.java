@@ -5,12 +5,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.security.InvalidParameterException;
 import java.security.Key;
+import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +30,7 @@ public class JwtTokenUtil {
 
     public String generateToken(Account account) {
         Map<String, Object> claims = new HashMap<>();
+        //this.generateSecretKey();
         claims.put("username", account.getUsername());
         try{
             return Jwts.builder()
@@ -36,14 +40,20 @@ public class JwtTokenUtil {
                     .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                     .compact();
         }catch (Exception e){
-            System.out.println("Cannot generate token, error: " + e.getMessage());
-            return null;
+            throw new InvalidParameterException("Cannot create jwt token, error: " + e.getMessage());
         }
     }
 
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private String generateSecretKey() {
+        SecureRandom random = new SecureRandom();
+        byte[] keyBytes = new byte[32]; //256 bit key
+        random.nextBytes(keyBytes);
+        return Encoders.BASE64.encode(keyBytes);
     }
 
     private Claims extractAllClaims(String token) {

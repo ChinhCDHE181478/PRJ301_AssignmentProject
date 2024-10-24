@@ -6,6 +6,7 @@ import dev.chinhcd.backend.repository.RoleRepository;
 import dev.chinhcd.backend.service.InterfaceService.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
+    @Transactional
     @Override
     public Set<RoleResponse> getAllRoles() {
         return roleRepository.findAll().stream().map(role -> RoleResponse.builder()
@@ -24,6 +26,7 @@ public class RoleServiceImpl implements RoleService {
                 .build()).collect(Collectors.toSet());
     }
 
+    @Transactional
     @Override
     public Set<RoleResponse> findRoleByAccountId(Integer accountId) {
         Set<Role> roles = roleRepository.findRoleByAccountId(accountId);
@@ -32,6 +35,7 @@ public class RoleServiceImpl implements RoleService {
                 .collect(Collectors.toSet());
     }
 
+    @Transactional
     @Override
     public Optional<Role> findRoleById(Integer roleId) {
         return roleRepository.findById(roleId);

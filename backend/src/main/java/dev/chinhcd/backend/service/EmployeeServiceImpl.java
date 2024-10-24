@@ -11,6 +11,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final DepartmentServiceImpl departmentService;
 
 
+    @Transactional
     @Override
     public Set<EmployeeResponse> getAllEmployees() {
         return employeeRepository.findAll().stream().map(employee -> EmployeeResponse.builder()
@@ -32,6 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .build()).collect(Collectors.toSet());
     }
 
+    @Transactional
     @Override
     public Set<EmployeeResponse> getEmployeesByEmployeeDtos(EmployeeRequest employeeRequest) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -72,6 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .build()).collect(Collectors.toSet());
     }
 
+    @Transactional
     @Override
     public Optional<Employee> getEmployeeById(int id) {
         return employeeRepository.getEmployeeByEmployeeId(id);

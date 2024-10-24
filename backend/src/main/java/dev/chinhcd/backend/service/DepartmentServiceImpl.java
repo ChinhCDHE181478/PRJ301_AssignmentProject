@@ -5,6 +5,7 @@ import dev.chinhcd.backend.repository.DepartmentRepository;
 import dev.chinhcd.backend.service.InterfaceService.DepartmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 public class DepartmentServiceImpl implements DepartmentService {
     DepartmentRepository departmentRepository;
 
+    @Transactional
     @Override
     public Optional<DepartmentResponse> findById(int id) {
         return departmentRepository.findById(id).map(department -> DepartmentResponse.builder()

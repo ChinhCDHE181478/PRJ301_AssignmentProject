@@ -158,6 +158,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
+    @Transactional
     @Override
     public Account updateAccount(AccountRequest accountRequest) throws DataNotFoundException {
         // Tìm tài khoản cần cập nhật theo username

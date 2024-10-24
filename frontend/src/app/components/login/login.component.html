@@ -1,0 +1,27 @@
+<div class="login-page">
+  <div class="form-login">
+    <div class="login-panel">
+      <h4>LOGIN PANEL</h4>
+      <small>Inventory managerment system</small>
+    </div>
+
+    <form (submit)="login()">
+      <div class="input-acccount">
+        <div>Username</div>
+        <input type="text" id="username input" [(ngModel)]="userLogin.username" name="username" />
+        <div *ngIf="errors.username" class="error-message">
+          {{ errors.username }}
+        </div>
+        <div>Password</div>
+        <input type="text" id="password input" [(ngModel)]="userLogin.password" name="password" />
+        <div *ngIf="errors.password" class="error-message">
+          {{ errors.password }}
+        </div>
+      </div>
+
+      <div class="btn-login">
+        <button class="btn btn-primary" type="submit">Login</button>
+      </div>
+    </form>
+  </div>
+</div>

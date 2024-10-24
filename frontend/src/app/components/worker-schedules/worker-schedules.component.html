@@ -1,0 +1,331 @@
+<div class="home-page">
+  <div>
+    <app-header></app-header>
+  </div>
+
+  <div class="container-fluid table-container">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <div
+          style="
+            font-size: 25px;
+            font-weight: bolder;
+            text-align: center;
+            margin-bottom: 20px;
+          "
+        >
+          Worker Schedule
+        </div>
+        <div class="button-container">
+          <button class="btn-custom" (click)="toggleAddModal()">Add</button>
+          <button class="btn-custom" (click)="toggleSearchModal()">
+            Search
+          </button>
+          <button class="btn-custom" (click)="viewAll()">View All</button>
+        </div>
+
+        <div>
+          <div style="margin-top: 20px; font-weight: bolder">
+            Current branch
+          </div>
+
+          <table *ngIf="schedule" class="table plan-campaign">
+            <thead>
+              <tr class="table-header">
+                <th>Schedule ID</th>
+                <th>Campaign ID</th>
+                <th>Date</th>
+                <th>Shift Name</th>
+                <th>Quantity</th>
+              </tr>
+            </thead>
+            <tbody class="table-body plan-campaign-body">
+              <tr>
+                <td>{{schedule.scheduleId}}</td>
+                <td>{{schedule.campaignId}}</td>
+                <td>{{schedule.date | date:"yyyy-MM-dd"}}</td>
+                <td>{{schedule.shift?.shiftName}}</td>
+                <td>{{schedule.quantity}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <table class="table">
+            <thead>
+              <tr class="table-header">
+                <th>No.</th>
+                <th>Work ID</th>
+                <th>Schedule ID</th>
+                <th>Employee ID</th>
+                <th>Employee Name</th>
+                <th>Planned Quantity</th>
+                <th>Actual Quantity</th>
+                <th>Alpha</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              <tr *ngFor="let attendent of attendents; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ attendent.worker.workerId }}</td>
+                <td>{{ attendent.worker.scheduleId }}</td>
+                <td>{{ attendent.worker.employee.employeeId }}</td>
+                <td>{{ attendent.worker.employee.employeeName }}</td>
+                <td>{{ attendent.worker.quantity }}</td>
+                <td>{{ attendent.quantity }}</td>
+                <td>{{ attendent.alpha }}</td>
+                <td>
+                  <button (click)="openEditModal(attendent)">Edit</button>
+                  <button (click)="openModal(attendent)">Delete</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Record Modal -->
+  <div
+    class="modal"
+    [ngClass]="{ show: isAddModalOpen }"
+    id="addModal"
+  >
+    <div class="modal-content">
+      <span class="close" (click)="toggleAddModal()">&times;</span>
+      <h3>Add Worker Attendent</h3>
+      <form (ngSubmit)="addRecord()">
+        <div class="form-group">
+          <label for="addScheduleID">Schedule ID</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="addScheduleID"
+            [(ngModel)]="newAttendent.worker.scheduleId"
+            name="addScheduleID"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.scheduleId" class="error-message">
+            {{ errors.scheduleId }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="addEmployeeID">Employee ID</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="addEmployeeID"
+            [(ngModel)]="newAttendent.worker.employee.employeeId"
+            name="addEmployeeID"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.employeeId" class="error-message">
+            {{ errors.employeeId }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="addQuantity">Planned Quantit</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="addQuantity"
+            [(ngModel)]="newAttendent.worker.quantity"
+            name="addPlannedQuantity"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.plannedQuantity" class="error-message">
+            {{ errors.plannedQuantity }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="addQuantity">Actual Quantity</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="addQuantity"
+            [(ngModel)]="newAttendent.quantity"
+            name="addActualQuantity"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.actualQuantity" class="error-message">
+            {{ errors.actualQuantity }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="addAlpha">Alpha</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="addAlpha"
+            [(ngModel)]="newAttendent.alpha"
+            name="addAlpha"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.alpha" class="error-message">
+            {{ errors.alpha }}
+          </div>
+        </div>
+        <div class="form-buttons" style="margin-top: 10px">
+          <button type="submit" class="btn-custom">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Search Modal -->
+  <div class="modal" [ngClass]="{ show: isSearchModalOpen }" id="searchModal">
+    <div class="modal-content">
+      <span class="close" (click)="toggleSearchModal()">&times;</span>
+      <h3>Search Worker Attendent</h3>
+      <form (submit)="performSearch()">
+        <div class="form-group">
+          <label for="searchWorkerId">Worker ID</label>
+          <input
+            type="text"
+            placeholder="Not required"
+            id="searchWorkerID"
+            name="workerId"
+            [(ngModel)]="searchCiteria.worker.workerId"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group">
+          <label for="searchScheduleID">Schedule ID</label>
+          <input
+            type="text"
+            placeholder="Not required"
+            id="searchScheduleID"
+            name="scheduleId"
+            [(ngModel)]="searchCiteria.worker.scheduleId"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group">
+          <label for="searchEmployeeID">Employee ID</label>
+          <input
+            type="text"
+            placeholder="Not required"
+            id="searchEmployeeID"
+            name="employeeID"
+            [(ngModel)]="searchCiteria.worker.employee.employeeId"
+            class="form-control"
+          />
+        </div>
+        <div class="form-buttons" style="margin-top: 10px">
+          <button type="submit" class="btn-custom">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div [ngClass]="{ show: isEditModalOpen }" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closeEditModal()">&times;</span>
+      <h3>{{ titleEdit }}</h3>
+      <form (submit)="saveEdit()">
+        <div class="form-group">
+          <label for="editCampaignID">Schedule ID</label>
+          <input
+            type="number"
+            id="editScheduleID"
+            name="scheduleId"
+            [(ngModel)]="editAttendent.worker.scheduleId"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.scheduleId" class="error-message">
+            {{ errors.scheduleId }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editEmployeeID">Employee ID</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="addEmployeeID"
+            [(ngModel)]="editAttendent.worker.employee.employeeId"
+            name="addEmployeeID"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.employeeId" class="error-message">
+            {{ errors.employeeId }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editQuantity">Planned Quantity</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="editQuantity"
+            [(ngModel)]="editAttendent.worker.quantity"
+            name="addPlannedQuantity"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.plannedQuantity" class="error-message">
+            {{ errors.plannedQuantity }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editQuantity">Actual Quantity</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="editQuantity"
+            [(ngModel)]="editAttendent.quantity"
+            name="addActualQuantity"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.actualQuantity" class="error-message">
+            {{ errors.actualQuantity }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editAlpha">Alpha</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="editAlpha"
+            [(ngModel)]="editAttendent.alpha"
+            name="addAlpha"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.alpha" class="error-message">
+            {{ errors.alpha }}
+          </div>
+        </div>
+        <div class="form-buttons" style="margin-top: 10px">
+          <button type="submit" class="btn-custom">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <div class="modal" [ngClass]="{ show: isVisible }">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <p>{{ titleModalDelete }}</p>
+      <div class="modal-actions">
+        <button (click)="confirmDelete()">Yes</button>
+        <button (click)="closeModal()">No</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <app-footer></app-footer>
+  </div>
+</div>

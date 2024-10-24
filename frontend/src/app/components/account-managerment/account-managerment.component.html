@@ -1,0 +1,192 @@
+<div class="home-page">
+    <div>
+        <app-header></app-header>
+    </div>
+    
+    <div class="container-fluid table-container">
+        <div class="row justify-content-center"> <!-- Thêm class justify-content-center -->
+            <div class="col-md-10"> <!-- Thêm một cột để giới hạn chiều rộng bảng -->
+                <div style="font-size: 25px; font-weight: bolder; text-align: center; margin-bottom: 20px;">Account Managerment</div>
+                <div class="button-container">
+                    <button class="btn-custom" (click)="clearEmployee()">View all</button>
+                    <button class="btn-custom" (click)="toggleAddModal()">Add</button>
+                    <button class="btn-custom" (click)="toggleSearchModal()">Search</button>
+                    <button class="btn-custom">View employees</button>
+                </div>
+
+                <table *ngIf="employee !== null">
+                    <thead>
+                        <tr>
+                            <th>Employee ID</th>
+                            <th>Name</th>
+                            <th>Department</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{employee.employeeId}}</td>
+                            <td>{{employee.employeeName}}</td>
+                            <td>{{employee.department?.departmentName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                        <thead>
+                            <tr>
+                              <th>No.</th>
+                              <th>Username</th>
+                              <th>Employee ID</th>
+                              <th>Role</th>
+                              <th>Status</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let account of accounts; let i = index">
+                                <td>{{(i + 1)}}</td>
+                                <td>{{account.username}}</td>
+                                <td>{{account.employeeId}}</td>
+                                <td>{{getRolesAsString(account.role)}}</td>
+                                <td>{{account.status}}</td>
+                                <td>
+                                    <button (click)="openEditModal(account)">Edit</button>
+                                    <button (click)="viewDetailAccount(account)">View</button>
+                                    <button (click)="deleteAccount(account)">Delete</button>
+                                </td>
+                            </tr>
+                          </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Add User Modal -->
+    <div class="modal" [ngClass]="{'show': isAddModalOpen}">
+        <div class="modal-content">
+            <span class="close" (click)="toggleAddModal()">&times;</span>
+            <h3>Add User</h3>
+            <form (submit)="addUser()">
+                <div class="form-group">
+                    <label for="addUsername">Username</label>
+                    <input type="text" placeholder="Required" id="addUsername" name="username" [(ngModel)]="newUser.username" class="form-control">
+                    <div *ngIf="errors.username" class="error-message">{{ errors.username }}</div>
+                </div>
+                <div class="form-group">
+                    <label for="addPassword">Password</label>
+                    <input type="text" placeholder="Required" id="addPassword" name="password" [(ngModel)]="newPassword" class="form-control"> 
+                    <div *ngIf="errors.password" class="error-message">{{ errors.password }}</div>
+                </div>
+                <div class="form-group">
+                    <label for="addEmployeeID">Employee ID</label>
+                    <input type="number" placeholder="Required" min="0" id="addEmployeeID" name="employeeId" [(ngModel)]="newUser.employeeId" class="form-control">
+                    <div *ngIf="errors.employeeId" class="error-message">{{ errors.employeeId }}</div>
+                </div>
+                <div class="form-group">
+                    <label>Roles (At least 1)</label>
+                    <div *ngFor="let role of roles">
+                        <input 
+                            type="checkbox" 
+                            [value]="role" 
+                            (change)="onCheckboxChange(role, $event)" 
+                            [checked]="newUser.role.includes(role)"
+                        />
+                        {{ role.name }}
+                    </div>
+                    <div *ngIf="errors.role" class="error-message">{{ errors.role }}</div>
+                </div>
+                <div class="form-buttons" style="margin-top: 10px;">
+                    <button type="submit" class="btn-custom">Add User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Search Modal -->
+    <div class="modal" [ngClass]="{'show': isSearchModalOpen}">
+        <div class="modal-content">
+        <span class="close" (click)="toggleSearchModal()">&times;</span>
+        <h3>Search User</h3>
+        <form (submit)="performSearch()">
+            <div class="form-group">
+            <label for="searchUsername">Username</label>
+            <input type="text" placeholder="Not required" id="searchUsername" name="username" [(ngModel)]="searchCriteria.username" class="form-control">
+            </div>
+            <div class="form-group">
+            <label for="searchEmployeeID">Employee ID</label>
+            <input type="number" placeholder="Not required" min="0" id="searchEmployeeID" name="employeeId" [(ngModel)]="searchCriteria.employeeId" class="form-control">
+            </div>
+            <div class="form-group">
+            <label>Roles (Not required)</label>
+            <div *ngFor="let role of roles">
+                <input 
+                    type="checkbox" 
+                    [value]="role" 
+                    (change)="onRoleChange(role, $event)" 
+                    [checked]="selectedRoles.includes(role)"
+                />
+                {{ role.name }}
+            </div>
+            </div>
+            <div class="form-group">
+            <label for="searchStatus">Status</label>
+            <select id="searchStatus" name="status" [(ngModel)]="searchCriteria.status" class="form-control">
+                <option [ngValue]="null">--Not required--</option>
+                <option [ngValue]="'Blocked'">Blocked</option>
+                <option [ngValue]="'Actived'">Actived</option>
+            </select>
+            </div>
+            <div class="form-buttons">
+            <button type="submit" style="margin-top: 10px;" class="btn-custom">Search</button>
+            </div>
+        </form>
+        </div>
+    </div>
+
+
+
+    <!-- Modal sẽ chỉ hiển thị khi isEditModalOpen là true -->
+    <div [ngClass]="{'show': isEditModalOpen}" class="modal">
+        <div class="modal-content">
+            <span class="close" (click)="closeEditModal()">&times;</span>
+            <h3>{{ titleEdit }}</h3>
+            <form (submit)="saveEdit()">
+                <div class="form-group">
+                    <label for="editPassword">Password</label>
+                    <input type="text" placeholder="Not required" id="editPassword" name="password" [(ngModel)]="changePassword" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Roles (Not required)</label>
+                    <div *ngFor="let role of roles">
+                        <input 
+                            type="checkbox" 
+                            [value]="role" 
+                            (change)="onRoleChangeEdit(role, $event)" 
+                            [checked]="selectedUser.role.includes(role)"
+                        />
+                        {{ role.name }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editStatus">Status</label>
+                    <select id="editStatus" name="status" [(ngModel)]="selectedUser.status" class="form-control">
+                        <option [ngValue]="'Blocked'">Blocked</option>
+                        <option [ngValue]="'Actived'">Actived</option>
+                    </select>
+                </div>
+                <div class="form-buttons" style="margin-top: 10px;">
+                    <button type="submit" class="btn-custom">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+      
+
+
+    <div>
+        <app-footer></app-footer>
+    </div>
+</div>

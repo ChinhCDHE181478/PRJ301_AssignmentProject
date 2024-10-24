@@ -22,7 +22,7 @@ public class Role {
     @Column(name = "Role_Name")
     private String roleName;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "Role_Feature",
             joinColumns = @JoinColumn(name = "Role_ID"),
@@ -32,4 +32,5 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     private Set<Account> accounts;
+
 }

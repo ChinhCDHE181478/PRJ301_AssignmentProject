@@ -1,0 +1,250 @@
+<div class="home-page">
+  <div>
+    <app-header></app-header>
+  </div>
+
+  <div class="container-fluid table-container">
+    <div class="row justify-content-center">
+      <!-- Thêm class justify-content-center -->
+
+      <div class="col-md-10">
+        <!-- Thêm một cột để giới hạn chiều rộng bảng -->
+        <div
+          style="
+            font-size: 25px;
+            font-weight: bolder;
+            text-align: center;
+            margin-bottom: 20px;
+          "
+        >
+          Production Plans
+        </div>
+        <div class="button-container">
+          <button class="btn-custom" (click)="viewAllPlans()">View all</button>
+          <button class="btn-custom" (click)="toggleAddModal()">Add</button>
+          <button class="btn-custom" (click)="toggleSearchModal()">
+            Search
+          </button>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Plan ID</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Department</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let plan of productionPlans; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ plan.planId }}</td>
+              <td>{{ plan.startDate | date : "yyyy-MM-dd" }}</td>
+              <td>{{ plan.endDate | date : "yyyy-MM-dd" }}</td>
+              <td>{{ plan.department?.departmentName }}</td>
+              <td>
+                <button (click)="openEditModal(plan)">Edit</button>
+                <button (click)="viewCampaign(plan)">View Campaign</button>
+                <button (click)="openModal(plan)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Modal -->
+  <div [ngClass]="{ show: isAddModalOpen }" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="toggleAddModal()">&times;</span>
+      <h3>Add Production Plan</h3>
+      <form (submit)="addProductionPlan()">
+        <div class="form-group">
+          <label for="addStartDate">Start Date</label>
+          <input
+            type="date"
+            placeholder="Required"
+            [(ngModel)]="newPlan.startDate"
+            name="startDate"
+            id="addStartDate"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.startDate" class="error-message">
+            {{ errors.startDate }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="addEndDate">End Date</label>
+          <input
+            type="date"
+            placeholder="Required"
+            id="addEndDate"
+            name="endDate"
+            [(ngModel)]="newPlan.endDate"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.endDate" class="error-message">
+            {{ errors.endDate }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="addDepartment">Department</label>
+          <select
+            [(ngModel)]="newPlan.department"
+            name="department"
+            id="addDepartment"
+            class="form-control"
+          >
+            <option *ngFor="let dept of departments" [ngValue]="dept">
+              {{ dept.departmentName }}
+            </option>
+          </select>
+          <div *ngIf="errors.department" class="error-message">
+            {{ errors.department }}
+          </div>
+        </div>
+        <div class="form-buttons" style="margin-top: 10px">
+          <button type="submit" class="btn-custom">Add Plan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Search Modal -->
+  <div [ngClass]="{ show: isSearchModalOpen }" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="toggleSearchModal()">&times;</span>
+      <h3>Search Production Plans</h3>
+      <form (submit)="performSearch()">
+        <div class="form-group">
+          <label for="searchStartDate">From Date</label>
+          <input
+            type="date"
+            placeholder="Not required"
+            id="searchStartDate"
+            name="startDate"
+            [(ngModel)]="searchCriteria.startDate"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group">
+          <label for="searchEndDate">To Date</label>
+          <input
+            type="date"
+            placeholder="Not required"
+            id="searchEndDate"
+            name="endDate"
+            [(ngModel)]="searchCriteria.endDate"
+            class="form-control"
+          />
+          <div *ngIf="errors.endDate" class="error-message">
+            {{ errors.endDate }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="searchDepartment">Department</label>
+          <select
+            [(ngModel)]="searchCriteria.department"
+            name="department"
+            id="addDepartment"
+            class="form-control"
+          >
+            <option [ngValue]="null">--Not required--</option>
+            <option *ngFor="let dept of departments" [ngValue]="dept">
+              {{ dept.departmentName }}
+            </option>
+          </select>
+        </div>
+        <div class="form-buttons" style="margin-top: 10px">
+          <button type="submit" class="btn-custom">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div [ngClass]="{ show: isEditModalOpen }" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closeEditModal()">&times;</span>
+      <h3>{{titleEdit}}</h3>
+      <form (submit)="saveEdit()">
+        <div class="form-group">
+          <label for="editStartDate">Start Date</label>
+          <input
+            type="date"
+            id="editStartDate"
+            name="startDate"
+            [(ngModel)]="selectedPlan.startDate"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.startDate" class="error-message">
+            {{ errors.startDate }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editEndDate">End Date</label>
+          <input
+            type="date"
+            id="editEndDate"
+            name="endDate"
+            [(ngModel)]="selectedPlan.endDate"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.endDate" class="error-message">
+            {{ errors.endDate }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="editDepartment">Department</label>
+          <select
+            [(ngModel)]="selectedPlan.department"
+            name="department"
+            id="addDepartment"
+            class="form-control"
+          >
+            <option *ngFor="let dept of departments" [ngValue]="dept">
+              {{ dept.departmentName }}
+            </option>
+          </select>
+          <div *ngIf="errors.department" class="error-message">
+            {{ errors.department }}
+          </div>
+        </div>
+        <div class="form-buttons" style="margin-top: 10px">
+          <button type="submit" class="btn-custom">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" [ngClass]="{ show: isVisible }">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <p>{{ titleModalDelete }}</p>
+      <div class="modal-actions">
+        <button (click)="confirmDelete()">Yes</button>
+        <button (click)="closeModal()">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error message modal -->
+  <div class="modal" [ngClass]="{ show: showError }">
+    <div class="modal-content">
+      <span class="close" (click)="closeError()">&times;</span>
+      <p>This plan has children, you need to delete them first.</p>
+    </div>
+  </div>
+
+  <div>
+    <app-footer></app-footer>
+  </div>
+</div>

@@ -1,8 +1,9 @@
 import { Role } from "./role";
 
 export interface Account{
-    username: string,
-    employeeId: number,
-    role: Set<String>,
-    status: string
+    userId: number | null,
+    username: string | null,
+    employeeId: number | null,
+    role: Role[],
+    status: string | null
 }

@@ -16,12 +16,12 @@ import java.util.Set;
 public class EmployeeController {
     private final EmployeeServiceImpl employeeService;
 
-    @GetMapping("all")
+    @GetMapping("/all")
     public ResponseEntity<Set<EmployeeResponse>> getAllEmployees() {
         return ResponseEntity.ok(employeeService.getAllEmployees());
     }
 
-    @GetMapping("search")
+    @GetMapping("/search")
     public ResponseEntity<Set<EmployeeResponse>> getEmployeeByEmployeeDto(@RequestBody EmployeeRequest request) {
         return ResponseEntity.ok(employeeService.getEmployeesByEmployeeDtos(request));
     }

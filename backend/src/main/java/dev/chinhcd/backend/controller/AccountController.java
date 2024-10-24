@@ -1,9 +1,11 @@
 package dev.chinhcd.backend.controller;
 
 import dev.chinhcd.backend.dtos.requests.AccountRequest;
+import dev.chinhcd.backend.dtos.requests.UserLoginRequest;
 import dev.chinhcd.backend.models.Account;
 import dev.chinhcd.backend.dtos.responses.AccountResponse;
 import dev.chinhcd.backend.service.AccountServiceImpl;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +46,16 @@ public class AccountController {
             Account account = accountService.updateAccount(accountRequest);
             return ResponseEntity.ok().body(account);
         } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@Valid @RequestBody UserLoginRequest userLoginRequest) {
+        try {
+            String token = accountService.login(userLoginRequest.username(), userLoginRequest.password());
+            return ResponseEntity.ok(token);
+        } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

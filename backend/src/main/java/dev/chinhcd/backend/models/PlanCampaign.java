@@ -28,6 +28,6 @@ public class PlanCampaign {
     @Column(name = "Quantity")
     private Integer quantity;
 
-    @Column(name = "Unit_Effort(Days)")
+    @Column(name = "Unit_Effort_Days")
     private Integer unitEffort_days;
 }

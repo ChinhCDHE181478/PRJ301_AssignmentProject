@@ -1,0 +1,17 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand web-name" href="#">Production Management</a>
+    <button class="navbar-toggler" type="button" (click)="toggleNavbar()" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div [ngClass]="{'show': isNavbarOpen}" class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="#">Production plans</a>
+            <a class="nav-item nav-link" href="#">Plan campaigns</a>
+            <a class="nav-item nav-link" href="#">Schedule campaigns</a>
+            <a class="nav-item nav-link" href="#">Worker schedule</a>
+            <a class="nav-item nav-link" href="#">Attendent</a>
+            <a class="nav-item nav-link" href="#">View employee</a>
+            <a class="nav-item nav-link" href="#">Log Out</a>
+        </div>
+    </div>
+</nav>

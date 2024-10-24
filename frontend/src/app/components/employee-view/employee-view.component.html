@@ -1,0 +1,131 @@
+<div class="home-page">
+  <div>
+    <app-header></app-header>
+  </div>
+
+  <div class="container-fluid table-container">
+    <div class="row justify-content-center">
+      <!-- Thêm class justify-content-center -->
+      <div class="col-md-10">
+        <!-- Thêm một cột để giới hạn chiều rộng bảng -->
+        <div
+          style="
+            font-size: 25px;
+            font-weight: bolder;
+            text-align: center;
+            margin-bottom: 20px;
+          "
+        >
+          View Employee
+        </div>
+        <div class="button-container">
+          <button class="btn-custom" (click)="clearAccount()">View all</button>
+          <button class="btn-custom" (click)="toggleSearchModal()">
+            Search
+          </button>
+        </div>
+
+        <table *ngIf="account !== null">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Employee ID</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{ account.username }}</td>
+              <td>{{ account.employeeId }}</td>
+              <td>{{ getRolesAsString(account.role) }}</td>
+              <td>{{ account.status }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Employee ID</th>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let employee of employees; let i = index">
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>{{ employee.employeeId }}</td>
+              <td>{{ employee.employeeName }}</td>
+              <td>{{ employee.department?.departmentName }}</td>
+              <th>
+                <button (click)="viewDetailEmployee(employee)">View</button>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search Employee Modal -->
+  <div class="modal" [ngClass]="{ show: isSearchModalOpen }">
+    <div class="modal-content">
+      <span class="close" (click)="toggleSearchModal()">&times;</span>
+      <h3>Search Employee</h3>
+      <form (submit)="performSearch($event)">
+        <div class="form-group">
+          <label for="searchEmployeeID">Employee ID</label>
+          <input
+            type="number"
+            placeholder="Not required"
+            min="0"
+            id="searchEmployeeID"
+            name="employeeId"
+            [(ngModel)]="searchCriteria.employeeId"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group">
+          <label for="searchEmployeeName">Employee Name</label>
+          <input
+            type="text"
+            placeholder="Not required"
+            id="searchEmployeeName"
+            name="employeeName"
+            [(ngModel)]="searchCriteria.employeeName"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group">
+          <label for="searchDepartment">Department</label>
+          <select
+            id="searchDepartment"
+            [(ngModel)]="searchCriteria.department"
+            name="department"
+            class="form-control"
+          >
+            <option [ngValue]="null">--Not required--</option>
+            <option
+              *ngFor="let department of departments"
+              [ngValue]="department"
+            >
+              {{ department.departmentName }}
+            </option>
+          </select>
+        </div>
+        <div class="form-buttons">
+          <button type="submit" style="margin-top: 10px" class="btn-custom">
+            Search
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div>
+    <app-footer></app-footer>
+  </div>
+</div>

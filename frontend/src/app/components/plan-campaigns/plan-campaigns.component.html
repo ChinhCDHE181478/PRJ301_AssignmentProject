@@ -1,0 +1,291 @@
+<div class="home-page">
+  <div>
+    <app-header></app-header>
+  </div>
+
+  <div class="container-fluid table-container">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <div
+          style="
+            font-size: 25px;
+            font-weight: bolder;
+            text-align: center;
+            margin-bottom: 20px;
+          "
+        >
+          Production Plan Campaigns
+        </div>
+        <div class="button-container">
+          <button class="btn-custom" (click)="viewAllCampaigns()">
+            View all
+          </button>
+          <button class="btn-custom" (click)="toggleAddModal()">Add</button>
+          <button class="btn-custom" (click)="toggleSearchModal()">
+            Search
+          </button>
+        </div>
+
+        <div *ngIf="plan !== null">
+          <div style="margin-top: 20px; font-weight: bolder">
+            Current branch
+          </div>
+          <table class="table">
+            <thead>
+              <tr class="table-header">
+                <th>ID</th>
+                <th>Start date</th>
+                <th>End date</th>
+                <th>Department</th>
+              </tr>
+            </thead>
+            <tbody class="table-body">
+              <tr>
+                <td>{{ plan.planId }}</td>
+                <td>{{ plan.startDate | date : "yyyy-MM-dd" }}</td>
+                <td>{{ plan.endDate | date : "yyyy-MM-dd" }}</td>
+                <td>{{ plan.department?.departmentName }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Campaign ID</th>
+              <th>Plan ID</th>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Unit Effort (Days)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let campaign of campaigns; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ campaign.campaignId }}</td>
+              <td>{{ campaign.planId }}</td>
+              <td>{{ campaign.product?.productName }}</td>
+              <td>{{ campaign.quantity }}</td>
+              <td>{{ campaign.unitEffortDays }}</td>
+              <td>
+                <button (click)="openEditModal(campaign)">Edit</button>
+                <button (click)="viewSchedule(campaign)">View Schedule</button>
+                <button (click)="openModal(campaign)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Modal -->
+  <div [ngClass]="{ show: isAddModalOpen }" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="toggleAddModal()">&times;</span>
+      <h3>Add Campaign</h3>
+      <form (submit)="addCampaign()">
+        <div class="form-group">
+          <label for="addPlanId">Plan ID (number)</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="addPlanId"
+            name="planId"
+            [(ngModel)]="newCampaign.planId"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.planId" class="error-message">
+            {{ errors.planId }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="addProduct">Product (option)</label>
+          <select
+            id="addProduct"
+            name="product"
+            [(ngModel)]="newCampaign.product"
+            class="form-control"
+          >
+            <option *ngFor="let prod of products" [ngValue]="prod">
+              {{ prod.productName }}
+            </option>
+          </select>
+          <div *ngIf="errors.product" class="error-message">
+            {{ errors.product }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="addQuantity">Quantity (number)</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="addQuantity"
+            name="quantity"
+            [(ngModel)]="newCampaign.quantity"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.quantity" class="error-message">
+            {{ errors.quantity }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="addEffort">Unit Effort (Days) (number)</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="addEffort"
+            name="unitEffortDays"
+            [(ngModel)]="newCampaign.unitEffortDays"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.unitEffort" class="error-message">
+            {{ errors.unitEffort }}
+          </div>
+        </div>
+        <div class="form-buttons" style="margin-top: 10px">
+          <button type="submit" class="btn-custom">Add Campaign</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div [ngClass]="{ show: isEditModalOpen }" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="closeEditModal()">&times;</span>
+      <h3>{{titleEdit}}</h3>
+      <form (submit)="saveEdit()">
+        <div class="form-group">
+          <label for="editPlanId">Plan ID (number)</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="editPlanId"
+            name="planId"
+            [(ngModel)]="selectedCampaign.planId"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.planId" class="error-message"> {{errors.planId}} </div>
+        </div>
+        <div class="form-group">
+          <label for="editProduct">Product (option)</label>
+          <select
+            id="editProduct"
+            name="product"
+            [(ngModel)]="selectedCampaign.product"
+            class="form-control"
+          >
+            <option *ngFor="let prod of products" [ngValue]="prod">
+              {{ prod.productName }}
+            </option>
+          </select>
+          <div *ngIf="errors.product" class="error-message"> {{errors.product}} </div>
+        </div>
+        <div class="form-group">
+          <label for="editQuantity">Quantity (number)</label>
+          <input
+            placeholder="Required"
+            type="number"
+            id="editQuantity"
+            name="quantity"
+            [(ngModel)]="selectedCampaign.quantity"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.quantity" class="error-message"> {{errors.quantity}} </div>
+        </div>
+        <div class="form-group">
+          <label for="editEffort">Unit Effort (Days) (number)</label>
+          <input
+            type="number"
+            placeholder="Required"
+            id="editEffort"
+            name="unitEffortDays"
+            [(ngModel)]="selectedCampaign.unitEffortDays"
+            class="form-control"
+            required
+          />
+          <div *ngIf="errors.unitEffort" class="error-message"> {{errors.unitEffort}} </div>
+        </div>
+        <div class="form-buttons" style="margin-top: 10px">
+          <button type="submit" class="btn-custom">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Search Modal -->
+  <div [ngClass]="{ show: isSearchModalOpen }" class="modal">
+    <div class="modal-content">
+      <span class="close" (click)="toggleSearchModal()">&times;</span>
+      <h3>Search Campaigns</h3>
+      <form (submit)="performSearch()">
+        <div class="form-group">
+          <label for="searchCampaignId">Campaign ID (number)</label>
+          <input
+            type="number"
+            placeholder="Not required"
+            id="searchCampaignId"
+            name="campaignId"
+            [(ngModel)]="searchCriteria.campaignId"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group">
+          <label for="searchPlanId">Plan ID (number)</label>
+          <input
+            type="number"
+            placeholder="Not required"
+            id="searchPlanId"
+            name="planId"
+            [(ngModel)]="searchCriteria.planId"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group">
+          <label for="searchProduct">Product (option)</label>
+          <select id="searchProduct" [(ngModel)]="searchCriteria.product" name="product" class="form-control">
+            <option [ngValue]="null">--Not required--</option>
+            <option *ngFor="let prod of products" [ngValue]="prod">
+              {{ prod.productName }}
+            </option>
+          </select>
+        </div>
+        <div class="form-buttons" style="margin-top: 10px">
+          <button type="submit" class="btn-custom">Search</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" [ngClass]="{ show: isVisible }">
+    <div class="modal-content">
+      <span class="close" (click)="closeModal()">&times;</span>
+      <p>{{ titleModalDelete }}</p>
+      <div class="modal-actions">
+        <button (click)="confirmDelete()">Yes</button>
+        <button (click)="closeModal()">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error message modal -->
+  <div class="modal" [ngClass]="{ show: showError }">
+    <div class="modal-content">
+      <span class="close" (click)="closeError()">&times;</span>
+      <p>This campaign has children, you need to delete them first.</p>
+    </div>
+  </div>
+
+  <div>
+    <app-footer></app-footer>
+  </div>
+</div>
