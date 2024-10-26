@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
-import { Account } from '../../common/account';
+import { Account } from '../../common/accountResponse';
 import { CommonModule } from '@angular/common';
 import { Employee } from '../../common/employee';
 import { Role } from '../../common/role';

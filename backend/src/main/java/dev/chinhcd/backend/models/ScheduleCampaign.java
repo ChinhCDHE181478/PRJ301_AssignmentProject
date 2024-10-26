@@ -17,11 +17,11 @@ public class ScheduleCampaign {
     @Id
     @Column(name = "Schedule_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer campaignId;
+    private Integer scheduleId;
 
     @ManyToOne
     @JoinColumn(name = "Campaign_ID")
-    private PlanCampaign planCampaign;
+    private PlanCampaign campaign;
 
     @Column(name = "Date")
     private Date date;

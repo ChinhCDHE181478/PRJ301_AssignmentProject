@@ -39,7 +39,7 @@ public class Account implements UserDetails {
     @Column(name = "Status")
     private String status;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "User_Role",
             joinColumns = @JoinColumn(name = "User_ID"),

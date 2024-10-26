@@ -5,13 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record EmployeeRequest(
 
-        @JsonProperty("Employee_ID")
+        @JsonProperty("employeeId")
         Integer id,
 
-        @JsonProperty("Employee_Name")
         String employeeName,
 
-        @JsonProperty("Department")
+        @JsonProperty("department")
         DepartmentRequest departmentRequest
 ) {
 

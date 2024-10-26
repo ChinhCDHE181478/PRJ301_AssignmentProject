@@ -22,5 +22,10 @@ public class ProductionPlan {
     @Column(name = "Start_Date")
     private Date starDate;
 
+    private Date endDate;
+
+    @ManyToOne
+    @JoinColumn(name = "Department_ID")
+    private Department department;
 
 }

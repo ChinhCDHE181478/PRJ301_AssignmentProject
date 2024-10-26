@@ -19,12 +19,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
-    EntityManager entityManager;
+    private final EntityManager entityManager;
     private final EmployeeRepository employeeRepository;
     private final DepartmentServiceImpl departmentService;
 
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Set<EmployeeResponse> getAllEmployees() {
         return employeeRepository.findAll().stream().map(employee -> EmployeeResponse.builder()
@@ -34,7 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .build()).collect(Collectors.toSet());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Set<EmployeeResponse> getEmployeesByEmployeeDtos(EmployeeRequest employeeRequest) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -44,6 +44,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         Join<Employee, Department> departmentJoin = employee.join("department", JoinType.LEFT);
 
         Predicate predicate = cb.conjunction();
+
+        if(employeeRequest.id() != null) {
+            predicate = cb.and(predicate, cb.equal(employee.get("employeeId"), employeeRequest.id()));
+        }
 
         if (employeeRequest.employeeName() != null && !employeeRequest.employeeName().isBlank()) {
             predicate = cb.and(predicate,
@@ -58,11 +62,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                 predicate = cb.and(predicate,
                         cb.like(cb.lower(departmentJoin.get("departmentName")), "%" + departmentRequest.departmentName().toLowerCase() + "%"));
             }
-
-            if(departmentRequest.departmentType() != null && !departmentRequest.departmentType().isBlank()) {
-                predicate = cb.and(predicate,
-                        cb.like(cb.lower(departmentJoin.get("departmentType")), "%" + departmentRequest.departmentType().toLowerCase() + "%"));
-            }
         }
 
         query.where(predicate);
@@ -75,7 +74,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .build()).collect(Collectors.toSet());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Optional<Employee> getEmployeeById(int id) {
         return employeeRepository.getEmployeeByEmployeeId(id);

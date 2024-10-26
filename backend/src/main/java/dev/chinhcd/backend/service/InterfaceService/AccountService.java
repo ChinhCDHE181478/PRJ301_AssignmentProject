@@ -8,13 +8,15 @@ import dev.chinhcd.backend.dtos.responses.AccountResponse;
 import java.util.Set;
 
 public interface AccountService {
-    Account createAccount(AccountRequest accountRequest) throws DataNotFoundException;
+    AccountResponse createAccount(AccountRequest accountRequest) throws DataNotFoundException;
 
     Set<AccountResponse> getAllAccount();
 
     Set<AccountResponse> getAccountsbyAccountDto(AccountRequest accountRequest);
 
-    Account updateAccount(AccountRequest accountRequest) throws DataNotFoundException;
+    AccountResponse updateAccount(AccountRequest accountRequest) throws DataNotFoundException;
+
+    void deleteAccountById(int id);
 
     String login(String username, String password) throws DataNotFoundException;
 }

@@ -17,7 +17,7 @@ public class Attendent {
     @Column(name = "Attendent_ID", nullable = false)
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "Worker_Schedule_ID")
     private WorkerSchedule workerSchedule;
 
@@ -25,6 +25,6 @@ public class Attendent {
     private Integer quantity;
 
     @Column(name = "Alpha")
-    private Float alpha;
+    private Double alpha;
 
 }

@@ -38,47 +38,48 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public Account createAccount(AccountRequest accountRequest) throws DataNotFoundException {
+    public AccountResponse createAccount(AccountRequest accountRequest) throws DataNotFoundException {
 
         // Lấy Employee từ ID
-        Optional<Employee> employee = employeeService.getEmployeeById(accountRequest.employeeId());
-        if (employee.isEmpty()) {
-            throw new DataNotFoundException("Employee not found for ID: " + accountRequest.employeeId());
-        }
+        Employee employee = employeeService.getEmployeeById(accountRequest.employeeId())
+                .orElseThrow(() -> new DataNotFoundException("Employee not found"));
 
         Set<Role> roles = new HashSet<>();
         // Lấy các role từ cơ sở dữ liệu thay vì tạo mới
         if (accountRequest.roleRequests() != null) {
             for (RoleRequest roleRequest : accountRequest.roleRequests()) {
-                Optional<Role> existingRole = roleService.findRoleById(roleRequest.RoleID());
+                Optional<Role> existingRole = roleService.findRoleById(roleRequest.roleId());
                 if (existingRole.isPresent()) {
                     roles.add(existingRole.get());
                 } else {
-                    throw new DataNotFoundException("Role not found with ID: " + roleRequest.RoleID());
+                    throw new DataNotFoundException("Role not found with ID: " + roleRequest.roleId());
                 }
             }
         }
 
-        // Tạo đối tượng Account
-        var account = Account.builder()
+        Account savedAccount = accountRepository.save(Account.builder()
                 .username(accountRequest.username())
                 .password(passwordEncoder.encode(accountRequest.password()))
-                .employee(employee.get())
+                .employee(employee)
                 .roles(roles)
                 .status("Blocked")
-                .build();
+                .build());
 
-        // Lưu tài khoản vào repository
-        return accountRepository.save(account);
+        return AccountResponse.builder()
+                .id(savedAccount.getUserId())
+                .username(savedAccount.getUsername())
+                .roleResponses(roleService.findRoleByAccountId(savedAccount.getUserId()))
+                .employeeId(savedAccount.getEmployee().getEmployeeId())
+                .status(savedAccount.getStatus())
+                .build();
     }
 
     @Override
     @Transactional(readOnly = true)
     public Set<AccountResponse> getAllAccount() {
         return accountRepository.findAll().stream().map(account -> AccountResponse.builder()
-                .Id(account.getUserId())
+                .id(account.getUserId())
                 .username(account.getUsername())
-                .password(account.getPassword())
                 .employeeId(account.getEmployee().getEmployeeId())
                 .status(account.getStatus())
                 .roleResponses(roleService.findRoleByAccountId(account.getUserId()))
@@ -125,13 +126,13 @@ public class AccountServiceImpl implements AccountService {
                 Predicate currentRolePredicate = cb.conjunction(); // Start with true for AND
 
                 // Filter by Role ID if present
-                if (roleRequest.RoleID() != null) {
-                    currentRolePredicate = cb.and(currentRolePredicate, cb.equal(roleJoin.get("roleId"), roleRequest.RoleID()));
+                if (roleRequest.roleId() != null) {
+                    currentRolePredicate = cb.and(currentRolePredicate, cb.equal(roleJoin.get("roleId"), roleRequest.roleId()));
                 }
 
                 // Filter by Role Name if present
-                if (roleRequest.RoleName() != null) {
-                    currentRolePredicate = cb.and(currentRolePredicate, cb.equal(cb.lower(roleJoin.get("roleName")), roleRequest.RoleName().toLowerCase()));
+                if (roleRequest.roleName() != null) {
+                    currentRolePredicate = cb.and(currentRolePredicate, cb.equal(cb.lower(roleJoin.get("roleName")), roleRequest.roleName().toLowerCase()));
                 }
 
                 // Add the current role predicate to the main role predicate
@@ -148,9 +149,8 @@ public class AccountServiceImpl implements AccountService {
         // Map to AccountResponse
         return accounts.stream()
                 .map(accountEntity -> AccountResponse.builder()
-                        .Id(accountEntity.getUserId())
+                        .id(accountEntity.getUserId())
                         .username(accountEntity.getUsername())
-                        .password(accountEntity.getPassword()) // Consider handling password securely
                         .employeeId(accountEntity.getEmployee().getEmployeeId())
                         .roleResponses(roleService.findRoleByAccountId(accountEntity.getUserId()))
                         .build())
@@ -160,50 +160,51 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     @Override
-    public Account updateAccount(AccountRequest accountRequest) throws DataNotFoundException {
+    public AccountResponse updateAccount(AccountRequest accountRequest) throws DataNotFoundException {
         // Tìm tài khoản cần cập nhật theo username
-        Optional<Account> accountToUpdate = accountRepository.findById(accountRequest.Id());
+        Account existingAccount = accountRepository.findById(accountRequest.id())
+                .orElseThrow(() -> new DataNotFoundException("This account does not exist"));
 
-        if (accountToUpdate.isEmpty()) {
-            throw new DataNotFoundException("This employee does not exist.");
+        // Update password
+        existingAccount.setPassword(accountRequest.password());
+
+        // Update status
+        existingAccount.setStatus(accountRequest.status());
+
+        // Update roles
+        Set<Role> roles = new HashSet<>();
+        for (RoleRequest roleRequest : accountRequest.roleRequests()) {
+            roles.add(Role.builder()
+                    .roleId(roleRequest.roleId())
+                    .roleName(roleRequest.roleName())
+                    .build());
         }
+        existingAccount.setRoles(roles);
 
-        Account existingAccount = accountToUpdate.get();
-
-        // Update password if provided
-        if (accountRequest.password() != null) {
-            existingAccount.setPassword(accountRequest.password());
-        }
-
-        // Update status if provided
-        if (accountRequest.status() != null) {
-            existingAccount.setStatus(accountRequest.status());
-        }
-
-        // Update roles if provided
-        if (accountRequest.roleRequests() != null) {
-            Set<Role> roles = new HashSet<>();
-            for (RoleRequest roleRequest : accountRequest.roleRequests()) {
-                roles.add(Role.builder()
-                        .roleId(roleRequest.RoleID())
-                        .roleName(roleRequest.RoleName())
-                        .build());
-            }
-            existingAccount.setRoles(roles);
-        }
+        existingAccount = accountRepository.save(existingAccount);
 
         // Lưu thay đổi vào cơ sở dữ liệu
-        return accountRepository.save(existingAccount);
+        return AccountResponse.builder()
+                .id(existingAccount.getUserId())
+                .username(existingAccount.getUsername())
+                .roleResponses(roleService.findRoleByAccountId(existingAccount.getUserId()))
+                .employeeId(existingAccount.getEmployee().getEmployeeId())
+                .status(existingAccount.getStatus())
+                .build();
+    }
+
+    @Transactional
+    @Override
+    public void deleteAccountById(int id) {
+        accountRepository.deleteById(id);
     }
 
     @Override
     public String login(String username, String password) throws DataNotFoundException {
-        Optional<Account> account = accountRepository.findByUsername(username);
-        if(account.isEmpty()){
-            throw new DataNotFoundException("Invalid username or password.");
-        }
+        Account account = accountRepository.findByUsername(username)
+                .orElseThrow(() -> new DataNotFoundException("Invalid username or password."));
 
-        if(!passwordEncoder.matches(password, account.get().getPassword())){
+        if (!passwordEncoder.matches(password, account.getPassword())) {
             throw new BadCredentialsException("Wrong username or password.");
         }
 
@@ -211,7 +212,7 @@ public class AccountServiceImpl implements AccountService {
 
         authenticationManager.authenticate(authenticationToken);
 
-        return jwtTokenUtil.generateToken(account.get());
+        return jwtTokenUtil.generateToken(account);
     }
 
 }

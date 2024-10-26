@@ -5,8 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("${api.prefix}/production/plans")
+@RequestMapping("${api.prefix}/products")
 @AllArgsConstructor
-public class ProductionPlanController {
-
+public class ProductController {
 }

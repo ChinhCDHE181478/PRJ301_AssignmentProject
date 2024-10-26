@@ -19,7 +19,7 @@ public class PlanCampaign {
 
     @ManyToOne
     @JoinColumn(name = "Plan_ID")
-    private PlanCampaign plan;
+    private ProductionPlan plan;
 
     @ManyToOne
     @JoinColumn(name = "Product_ID")

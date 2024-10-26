@@ -2,7 +2,6 @@ package dev.chinhcd.backend.controller;
 
 import dev.chinhcd.backend.dtos.requests.AccountRequest;
 import dev.chinhcd.backend.dtos.requests.UserLoginRequest;
-import dev.chinhcd.backend.models.Account;
 import dev.chinhcd.backend.dtos.responses.AccountResponse;
 import dev.chinhcd.backend.service.AccountServiceImpl;
 import jakarta.validation.Valid;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -23,7 +21,7 @@ public class AccountController {
     @PostMapping("/create")
     public ResponseEntity<?> createNewAccount(@RequestBody AccountRequest accountRequest) {
         try {
-            Account account = accountService.createAccount(accountRequest);
+            AccountResponse account = accountService.createAccount(accountRequest);
             return ResponseEntity.status(HttpStatus.CREATED).body(account);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -43,11 +41,17 @@ public class AccountController {
     @PutMapping("/update")
     public ResponseEntity<?> updateAccount(@RequestBody AccountRequest accountRequest) {
         try{
-            Account account = accountService.updateAccount(accountRequest);
-            return ResponseEntity.ok().body(account);
+            AccountResponse account = accountService.updateAccount(accountRequest);
+            return ResponseEntity.ok(account);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteAccount(@PathVariable int id) {
+        accountService.deleteAccountById(id);
+        return ResponseEntity.ok("Deleted successfully");
     }
 
     @PostMapping("/login")

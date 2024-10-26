@@ -17,25 +17,27 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements RoleService {
     private final RoleRepository roleRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Set<RoleResponse> getAllRoles() {
         return roleRepository.findAll().stream().map(role -> RoleResponse.builder()
-                .RoleID(role.getRoleId())
-                .RoleName(role.getRoleName())
+                .roleId(role.getRoleId())
+                .roleName(role.getRoleName())
                 .build()).collect(Collectors.toSet());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Set<RoleResponse> findRoleByAccountId(Integer accountId) {
-        Set<Role> roles = roleRepository.findRoleByAccountId(accountId);
-        return roles.stream()
-                .map(role -> RoleResponse.builder().RoleID(role.getRoleId()).RoleName(role.getRoleName()).build())
+        return roleRepository.findRoleByAccountId(accountId).stream()
+                .map(role -> RoleResponse.builder()
+                        .roleId(role.getRoleId())
+                        .roleName(role.getRoleName())
+                        .build())
                 .collect(Collectors.toSet());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public Optional<Role> findRoleById(Integer roleId) {
         return roleRepository.findById(roleId);

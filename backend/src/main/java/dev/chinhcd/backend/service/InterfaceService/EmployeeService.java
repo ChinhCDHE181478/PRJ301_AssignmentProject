@@ -9,6 +9,9 @@ import java.util.Set;
 
 public interface EmployeeService {
     Set<EmployeeResponse> getAllEmployees();
+
     Set<EmployeeResponse> getEmployeesByEmployeeDtos(EmployeeRequest employeeRequest);
+
     Optional<Employee> getEmployeeById(int id);
+
 }

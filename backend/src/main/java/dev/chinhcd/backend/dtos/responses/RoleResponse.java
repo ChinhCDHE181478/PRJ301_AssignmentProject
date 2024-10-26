@@ -5,10 +5,10 @@ import lombok.Builder;
 
 @Builder
 public record RoleResponse(
-        @JsonProperty("Role_ID")
-        Integer RoleID,
+        @JsonProperty("id")
+        Integer roleId,
 
-        @JsonProperty("Role_Name")
-        String RoleName
+        @JsonProperty("name")
+        String roleName
 ) {
 }

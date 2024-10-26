@@ -3,7 +3,7 @@ package dev.chinhcd.backend.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalTime;
+import java.sql.Time;
 
 @Entity
 @Data
@@ -23,8 +23,8 @@ public class Shift {
     private String shiftName;
 
     @Column(name = "Shift_Start")
-    private LocalTime shiftStart;
+    private Time shiftStart;
 
     @Column(name = "Shift_End")
-    private LocalTime shiftEnd;
+    private Time shiftEnd;
 }
