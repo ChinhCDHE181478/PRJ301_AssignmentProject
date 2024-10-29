@@ -5,13 +5,13 @@ import dev.chinhcd.backend.dtos.responses.CampaignResponse;
 import dev.chinhcd.backend.exceptions.DataNotFoundException;
 import dev.chinhcd.backend.models.PlanCampaign;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface CampaignService {
-    Set<CampaignResponse> getAllCampaigns();
+    List<CampaignResponse> getAllCampaigns();
 
-    Set<CampaignResponse> getCampaignsByCampaignRequest(CampaignRequest request);
+    List<CampaignResponse> getCampaignsByCampaignRequest(CampaignRequest request);
 
     CampaignResponse addCampaign(CampaignRequest request) throws DataNotFoundException;
 

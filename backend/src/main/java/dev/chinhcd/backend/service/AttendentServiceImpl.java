@@ -11,16 +11,22 @@ import dev.chinhcd.backend.models.ScheduleCampaign;
 import dev.chinhcd.backend.models.WorkerSchedule;
 import dev.chinhcd.backend.repository.AttendentRepository;
 import dev.chinhcd.backend.service.InterfaceService.AttendentService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AttendentServiceImpl implements AttendentService {
+    private final EntityManager entityManager;
     private final AttendentRepository attendentRepository;
     private final WorkerServiceImpl workerService;
     private final EmployeeServiceImpl employeeService;
@@ -79,14 +85,41 @@ public class AttendentServiceImpl implements AttendentService {
     }
 
     @Override
-    public Set<AttendentResponse> getAllAttendents() {
+    public List<AttendentResponse> getAllAttendents() {
         return attendentRepository.findAll().stream()
-                .map(this::convertToAttendentResponse).collect(Collectors.toSet());
+                .map(this::convertToAttendentResponse).toList();
     }
 
     @Override
-    public Set<AttendentResponse> searchAttendent(AttendentRequest request) {
-        return Set.of();
+    public List<AttendentResponse> searchAttendent(AttendentRequest request) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Attendent> cq = cb.createQuery(Attendent.class);
+        Root<Attendent> attendentRoot = cq.from(Attendent.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+
+        // Điều kiện tìm kiếm theo workerId
+        if (request.workerScheduleRequest().workerId() != null) {
+            predicates.add(cb.equal(attendentRoot.get("workerSchedule").get("workerScheduleId"), request.workerScheduleRequest().workerId()));
+        }
+
+        // Điều kiện tìm kiếm theo scheduleId
+        if (request.workerScheduleRequest().scheduleId() != null) {
+            predicates.add(cb.equal(attendentRoot.get("workerSchedule").get("schedule").get("id"), request.workerScheduleRequest().scheduleId()));
+        }
+
+        // Điều kiện tìm kiếm theo employeeId
+        if (request.workerScheduleRequest().employeeRequest().id() != null) {
+            predicates.add(cb.equal(attendentRoot.get("workerSchedule").get("employee").get("id"), request.workerScheduleRequest().employeeRequest().id()));
+        }
+
+        // Ghép các điều kiện lại với nhau
+        cq.where(predicates.toArray(new Predicate[0]));
+
+        // Thực hiện truy vấn
+        List<Attendent> results = entityManager.createQuery(cq).getResultList();
+
+        return results.stream().map(this::convertToAttendentResponse).toList();
     }
 
     @Override

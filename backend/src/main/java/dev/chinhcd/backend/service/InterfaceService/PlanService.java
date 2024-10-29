@@ -5,13 +5,13 @@ import dev.chinhcd.backend.dtos.responses.PlanResponse;
 import dev.chinhcd.backend.exceptions.DataNotFoundException;
 import dev.chinhcd.backend.models.ProductionPlan;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface PlanService {
-    Set<PlanResponse> getAllPlan();
+    List<PlanResponse> getAllPlan();
 
-    Set<PlanResponse> searchPlanByPlanRequest(PlanRequest planRequest);
+    List<PlanResponse> searchPlanByPlanRequest(PlanRequest planRequest);
 
     PlanResponse createPlan(PlanRequest planRequest) throws DataNotFoundException;
 

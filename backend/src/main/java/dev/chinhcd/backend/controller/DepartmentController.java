@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/departments")
@@ -17,7 +17,7 @@ public class DepartmentController {
     DepartmentServiceImpl departmentService;
 
     @GetMapping("/all")
-    public ResponseEntity<Set<DepartmentResponse>> getAll() {
+    public ResponseEntity<List<DepartmentResponse>> getAll() {
         return ResponseEntity.ok(departmentService.findAll());
     }
 }

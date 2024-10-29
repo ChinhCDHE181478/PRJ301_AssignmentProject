@@ -5,14 +5,14 @@ import dev.chinhcd.backend.dtos.responses.ScheduleResponse;
 import dev.chinhcd.backend.exceptions.DataNotFoundException;
 import dev.chinhcd.backend.models.ScheduleCampaign;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface ScheduleService {
 
-    Set<ScheduleResponse> getAllSchedules();
+    List<ScheduleResponse> getAllSchedules();
 
-    Set<ScheduleResponse> searchSchedule(ScheduleRequest request);
+    List<ScheduleResponse> searchSchedule(ScheduleRequest request);
 
     ScheduleResponse addSchedule(ScheduleRequest request) throws DataNotFoundException;
 

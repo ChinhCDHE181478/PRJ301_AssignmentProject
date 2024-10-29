@@ -23,3 +23,8 @@ api:
 jwt:
   expiration: 25923000 #30 days = 30 * 24 * 60 * 60
   secretKey: TaqlmGv1iEDMRiFp/pHuID1+T84IABfuA0xXh4GhiUI=
+
+accountManager:
+  username: chinh
+  password: 123
+  roleId: 3

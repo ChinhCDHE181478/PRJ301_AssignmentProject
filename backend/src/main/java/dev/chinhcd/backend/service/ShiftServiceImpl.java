@@ -8,9 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,13 +18,13 @@ public class ShiftServiceImpl implements ShiftService {
 
     @Transactional(readOnly = true)
     @Override
-    public Set<ShiftResponse> getAllShifts() {
+    public List<ShiftResponse> getAllShifts() {
         return shiftRepository.findAll().stream().map(shift -> ShiftResponse.builder()
                 .shiftId(shift.getShiftId())
                 .shiftName(shift.getShiftName())
                 .shiftStart(shift.getShiftStart())
                 .shiftEnd(shift.getShiftEnd())
-                .build()).collect(Collectors.toSet());
+                .build()).toList();
     }
 
     @Transactional(readOnly = true)

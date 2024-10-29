@@ -1,8 +1,6 @@
 package dev.chinhcd.backend.service;
 
 import dev.chinhcd.backend.dtos.requests.ScheduleRequest;
-import dev.chinhcd.backend.dtos.responses.CampaignResponse;
-import dev.chinhcd.backend.dtos.responses.ProductResponse;
 import dev.chinhcd.backend.dtos.responses.ScheduleResponse;
 import dev.chinhcd.backend.dtos.responses.ShiftResponse;
 import dev.chinhcd.backend.exceptions.DataNotFoundException;
@@ -23,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +32,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional(readOnly = true)
     @Override
-    public Set<ScheduleResponse> getAllSchedules() {
+    public List<ScheduleResponse> getAllSchedules() {
         return scheduleRepository.findAll().stream().map(scheduleCampaign -> ScheduleResponse.builder()
                 .scheduleId(scheduleCampaign.getScheduleId())
                 .date(scheduleCampaign.getDate())
@@ -48,12 +44,12 @@ public class ScheduleServiceImpl implements ScheduleService {
                         .shiftStart(scheduleCampaign.getShift().getShiftStart())
                         .shiftEnd(scheduleCampaign.getShift().getShiftEnd())
                         .build())
-                .build()).collect(Collectors.toSet());
+                .build()).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Set<ScheduleResponse> searchSchedule(ScheduleRequest request) {
+    public List<ScheduleResponse> searchSchedule(ScheduleRequest request) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<ScheduleCampaign> cq = cb.createQuery(ScheduleCampaign.class);
         Root<ScheduleCampaign> scheduleCampaignRoot = cq.from(ScheduleCampaign.class);
@@ -95,7 +91,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                         .shiftStart(scheduleCampaign.getShift().getShiftStart())
                         .shiftEnd(scheduleCampaign.getShift().getShiftEnd())
                         .build())
-                .build()).collect(Collectors.toSet());
+                .build()).toList();
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package dev.chinhcd.backend.service;
 
+import dev.chinhcd.backend.dtos.responses.ProductResponse;
 import dev.chinhcd.backend.models.Product;
 import dev.chinhcd.backend.repository.ProductRepository;
 import dev.chinhcd.backend.service.InterfaceService.ProductService;
@@ -7,9 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +18,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     @Override
-    public Set<Product> getAllProducts() {
-        return new HashSet<>(productRepository.findAll());
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream().map(product -> ProductResponse.builder()
+                .productId(product.getProductId())
+                .productName(product.getProductName())
+                .build()).toList();
     }
 
     @Transactional(readOnly = true)

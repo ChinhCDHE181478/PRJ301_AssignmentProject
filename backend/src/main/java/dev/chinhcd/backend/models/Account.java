@@ -1,6 +1,9 @@
 package dev.chinhcd.backend.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import dev.chinhcd.backend.repository.FeatureRepository;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Data
@@ -21,6 +23,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 public class Account implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "User_ID")
@@ -39,22 +42,14 @@ public class Account implements UserDetails {
     @Column(name = "Status")
     private String status;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "User_Role",
-            joinColumns = @JoinColumn(name = "User_ID"),
-            inverseJoinColumns = @JoinColumn(name = "Role_ID")
-    )
-    private Set<Role> roles;
+    @ManyToOne
+    @JoinColumn(name = "Role_ID")
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
-        for(Role role : roles) {
-            for(Feature feature : role.getFeatures()) {
-                authorityList.add(new SimpleGrantedAuthority("FEATURE_"+feature.getFeatureName()));
-            }
-        }
+                authorityList.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName().toUpperCase()));
         return authorityList;
     }
 

@@ -20,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +30,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Transactional(readOnly = true)
     @Override
-    public Set<PlanResponse> getAllPlan() {
+    public List<PlanResponse> getAllPlan() {
         return planRepository.findAll().stream().map(plan -> PlanResponse.builder()
                 .planId(plan.getPlanId())
                 .startDate(plan.getStarDate())
@@ -42,12 +40,12 @@ public class PlanServiceImpl implements PlanService {
                         .departmentName(plan.getDepartment().getDepartmentName())
                         .departmentType(plan.getDepartment().getDepartmentType())
                         .build())
-                .build()).collect(Collectors.toSet());
+                .build()).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Set<PlanResponse> searchPlanByPlanRequest(PlanRequest planRequest) {
+    public List<PlanResponse> searchPlanByPlanRequest(PlanRequest planRequest) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<ProductionPlan> cq = cb.createQuery(ProductionPlan.class);
         Root<ProductionPlan> productionPlan = cq.from(ProductionPlan.class);
@@ -89,8 +87,7 @@ public class PlanServiceImpl implements PlanService {
                         .startDate(plan.getStarDate())
                         .endDate(plan.getEndDate())
                         .build())
-
-                .collect(Collectors.toSet());
+                .toList();
     }
 
     @Transactional

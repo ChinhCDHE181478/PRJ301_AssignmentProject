@@ -3,7 +3,6 @@ package dev.chinhcd.backend.models;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.validator.constraints.UniqueElements;
 
 @Entity
 @Data

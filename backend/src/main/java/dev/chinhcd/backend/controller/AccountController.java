@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/accounts")
@@ -18,7 +18,7 @@ import java.util.Set;
 public class AccountController {
     private final AccountServiceImpl accountService;
 
-    @PostMapping("/create")
+    @PostMapping("create")
     public ResponseEntity<?> createNewAccount(@RequestBody AccountRequest accountRequest) {
         try {
             AccountResponse account = accountService.createAccount(accountRequest);
@@ -29,12 +29,12 @@ public class AccountController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Set<AccountResponse>> getAllAccounts() {
+    public ResponseEntity<List<AccountResponse>> getAllAccounts() {
         return ResponseEntity.ok(accountService.getAllAccount());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Set<AccountResponse>> searchAccount(@RequestBody AccountRequest accountRequest) {
+    public ResponseEntity<List<AccountResponse>> searchAccount(@RequestBody AccountRequest accountRequest) {
         return ResponseEntity.ok(accountService.getAccountsbyAccountDto(accountRequest));
     }
 

@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.Set;
 
+
 @Entity
 @Data
 @Getter
@@ -13,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "Roles")
 @Builder
+@ToString
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,16 +23,5 @@ public class Role {
 
     @Column(name = "Role_Name")
     private String roleName;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(
-            name = "Role_Feature",
-            joinColumns = @JoinColumn(name = "Role_ID"),
-            inverseJoinColumns = @JoinColumn(name = "Feature_ID")
-    )
-    private Set<Feature> features;
-
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private Set<Account> accounts;
 
 }

@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/campaigns")
@@ -16,12 +16,12 @@ public class CampaignController {
     private final CampaignServiceImpl campaignService;
 
     @GetMapping("/all")
-    public ResponseEntity<Set<CampaignResponse>> getAllCampaigns(){
+    public ResponseEntity<List<CampaignResponse>> getAllCampaigns(){
         return ResponseEntity.ok(campaignService.getAllCampaigns());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Set<CampaignResponse>> getCampaignsByCampaignRequest(@RequestBody CampaignRequest campaignRequest){
+    public ResponseEntity<List<CampaignResponse>> getCampaignsByCampaignRequest(@RequestBody CampaignRequest campaignRequest){
         return ResponseEntity.ok(campaignService.getCampaignsByCampaignRequest(campaignRequest));
     }
 

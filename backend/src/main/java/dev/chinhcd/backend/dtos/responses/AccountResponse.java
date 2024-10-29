@@ -1,10 +1,7 @@
 package dev.chinhcd.backend.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import dev.chinhcd.backend.dtos.requests.RoleRequest;
 import lombok.Builder;
-
-import java.util.Set;
 
 @Builder
 public record AccountResponse (
@@ -16,7 +13,7 @@ public record AccountResponse (
         Integer employeeId,
 
         @JsonProperty("role")
-        Set<RoleResponse> roleResponses,
+        RoleResponse roleResponses,
 
         String status
 ) {

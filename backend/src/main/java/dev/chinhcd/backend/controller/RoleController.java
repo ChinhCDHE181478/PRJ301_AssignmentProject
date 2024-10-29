@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/roles")
@@ -17,7 +17,7 @@ public class RoleController {
     private final RoleServiceImpl roleService;
 
     @GetMapping("/all")
-    public ResponseEntity<Set<RoleResponse>> getAllRoles() {
+    public ResponseEntity<List<RoleResponse>> getAllRoles() {
         return  ResponseEntity.ok(roleService.getAllRoles());
     }
 }

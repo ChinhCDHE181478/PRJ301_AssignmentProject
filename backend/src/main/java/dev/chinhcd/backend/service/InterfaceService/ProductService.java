@@ -1,12 +1,13 @@
 package dev.chinhcd.backend.service.InterfaceService;
 
+import dev.chinhcd.backend.dtos.responses.ProductResponse;
 import dev.chinhcd.backend.models.Product;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface ProductService {
-    Set<Product> getAllProducts();
+    List<ProductResponse> getAllProducts();
 
     Optional<Product> getProduct(int id);
 }

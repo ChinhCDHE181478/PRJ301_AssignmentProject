@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/attendents")
@@ -16,12 +16,12 @@ public class AttendentController {
     private final AttendentService attendentService;
 
     @GetMapping("/all")
-    public ResponseEntity<Set<AttendentResponse>> getAllAttendents() {
+    public ResponseEntity<List<AttendentResponse>> getAllAttendents() {
         return ResponseEntity.ok(attendentService.getAllAttendents());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Set<AttendentResponse>> searchAttendents(@RequestBody AttendentRequest request) {
+    public ResponseEntity<List<AttendentResponse>> searchAttendents(@RequestBody AttendentRequest request) {
         return ResponseEntity.ok(attendentService.searchAttendent(request));
     }
 
@@ -48,6 +48,6 @@ public class AttendentController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteAttendent(@PathVariable int id) {
         attendentService.deleteAttendent(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Deleted successfully");
     }
 }

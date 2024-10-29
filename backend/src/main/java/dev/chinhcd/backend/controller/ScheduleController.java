@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/schedules")
@@ -16,12 +16,12 @@ public class ScheduleController {
     private final ScheduleServiceImpl scheduleService;
 
     @GetMapping("/all")
-    public ResponseEntity<Set<ScheduleResponse>> getAllSchedules(){
+    public ResponseEntity<List<ScheduleResponse>> getAllSchedules(){
         return ResponseEntity.ok(scheduleService.getAllSchedules());
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Set<ScheduleResponse>> searchSchedule(@RequestBody ScheduleRequest request){
+    public ResponseEntity<List<ScheduleResponse>> searchSchedule(@RequestBody ScheduleRequest request){
         return ResponseEntity.ok(scheduleService.searchSchedule(request));
     }
 

@@ -21,8 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +32,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Transactional(readOnly = true)
     @Override
-    public Set<CampaignResponse> getAllCampaigns() {
+    public List<CampaignResponse> getAllCampaigns() {
         return campaignRepository.findAll().stream().map(planCampaign -> CampaignResponse.builder()
                 .campaignId(planCampaign.getCampaignId())
                 .planId(planCampaign.getPlan().getPlanId())
@@ -44,12 +42,12 @@ public class CampaignServiceImpl implements CampaignService {
                         .build())
                 .quantity(planCampaign.getQuantity())
                 .unitEffortDays(planCampaign.getUnitEffort_days())
-                .build()).collect(Collectors.toSet());
+                .build()).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Set<CampaignResponse> getCampaignsByCampaignRequest(CampaignRequest request) {
+    public List<CampaignResponse> getCampaignsByCampaignRequest(CampaignRequest request) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<PlanCampaign> cq = cb.createQuery(PlanCampaign.class);
         Root<PlanCampaign> planCampaignRoot = cq.from(PlanCampaign.class);
@@ -81,7 +79,7 @@ public class CampaignServiceImpl implements CampaignService {
                         .build())
                 .quantity(planCampaign.getQuantity())
                 .unitEffortDays(planCampaign.getUnitEffort_days())
-                .build()).collect(Collectors.toSet());
+                .build()).toList();
     }
 
     @Transactional

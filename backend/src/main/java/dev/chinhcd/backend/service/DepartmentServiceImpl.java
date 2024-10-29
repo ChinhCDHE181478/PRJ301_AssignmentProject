@@ -8,10 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,12 +34,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Transactional(readOnly = true)
     @Override
-    public Set<DepartmentResponse> findAll() {
+    public List<DepartmentResponse> findAll() {
         return departmentRepository.findAll().stream().map(department -> DepartmentResponse.builder()
                 .departmentId(department.getDepartmentId())
                 .departmentName(department.getDepartmentName())
                 .departmentType(department.getDepartmentType())
-                .build()).collect(Collectors.toSet());
+                .build()).toList();
     }
 
 }

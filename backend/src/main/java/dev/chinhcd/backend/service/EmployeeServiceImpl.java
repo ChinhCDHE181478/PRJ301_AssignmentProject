@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,17 +26,17 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Transactional(readOnly = true)
     @Override
-    public Set<EmployeeResponse> getAllEmployees() {
+    public List<EmployeeResponse> getAllEmployees() {
         return employeeRepository.findAll().stream().map(employee -> EmployeeResponse.builder()
                 .id(employee.getEmployeeId())
                 .employeeName(employee.getEmployeeName())
                 .departmentResponse(departmentService.findById(employee.getDepartment().getDepartmentId()).orElse(null))
-                .build()).collect(Collectors.toSet());
+                .build()).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public Set<EmployeeResponse> getEmployeesByEmployeeDtos(EmployeeRequest employeeRequest) {
+    public List<EmployeeResponse> getEmployeesByEmployeeDtos(EmployeeRequest employeeRequest) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> employee = query.from(Employee.class);
@@ -71,7 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .id(employeeMap.getEmployeeId())
                 .employeeName(employeeMap.getEmployeeName())
                 .departmentResponse(departmentService.findById(employeeMap.getDepartment().getDepartmentId()).orElse(null))
-                .build()).collect(Collectors.toSet());
+                .build()).toList();
     }
 
     @Transactional(readOnly = true)

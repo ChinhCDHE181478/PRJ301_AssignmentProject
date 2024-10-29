@@ -4,13 +4,13 @@ import dev.chinhcd.backend.dtos.requests.EmployeeRequest;
 import dev.chinhcd.backend.dtos.responses.EmployeeResponse;
 import dev.chinhcd.backend.models.Employee;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface EmployeeService {
-    Set<EmployeeResponse> getAllEmployees();
+    List<EmployeeResponse> getAllEmployees();
 
-    Set<EmployeeResponse> getEmployeesByEmployeeDtos(EmployeeRequest employeeRequest);
+    List<EmployeeResponse> getEmployeesByEmployeeDtos(EmployeeRequest employeeRequest);
 
     Optional<Employee> getEmployeeById(int id);
 

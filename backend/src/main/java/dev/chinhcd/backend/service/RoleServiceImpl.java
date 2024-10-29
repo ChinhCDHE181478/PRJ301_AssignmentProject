@@ -8,9 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,22 +18,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Transactional(readOnly = true)
     @Override
-    public Set<RoleResponse> getAllRoles() {
+    public List<RoleResponse> getAllRoles() {
         return roleRepository.findAll().stream().map(role -> RoleResponse.builder()
                 .roleId(role.getRoleId())
                 .roleName(role.getRoleName())
-                .build()).collect(Collectors.toSet());
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Set<RoleResponse> findRoleByAccountId(Integer accountId) {
-        return roleRepository.findRoleByAccountId(accountId).stream()
-                .map(role -> RoleResponse.builder()
-                        .roleId(role.getRoleId())
-                        .roleName(role.getRoleName())
-                        .build())
-                .collect(Collectors.toSet());
+                .build()).toList();
     }
 
     @Transactional(readOnly = true)

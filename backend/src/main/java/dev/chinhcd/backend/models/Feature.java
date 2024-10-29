@@ -3,8 +3,6 @@ package dev.chinhcd.backend.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
-
 @Entity
 @Data
 @Getter
@@ -22,6 +20,13 @@ public class Feature {
     @Column(name = "Feature_Name")
     private String featureName;
 
-    @ManyToMany(mappedBy = "features")
-    private Set<Role> roles;
+    @Column(name = "Path")
+    private String path;
+
+    @Column(name = "Method")
+    private String method;
+
+    @ManyToOne
+    @JoinColumn(name = "Role_ID")
+    private Role role;
 }

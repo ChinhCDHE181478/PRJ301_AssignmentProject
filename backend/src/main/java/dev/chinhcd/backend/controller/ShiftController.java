@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping("${api.prefix}/shifts")
@@ -17,7 +17,7 @@ public class ShiftController {
     private final ShiftServiceImpl shiftService;
 
     @GetMapping("/all")
-    public ResponseEntity<Set<ShiftResponse>> getAll() {
+    public ResponseEntity<List<ShiftResponse>> getAll() {
         return ResponseEntity.ok(shiftService.getAllShifts());
     }
 }
