@@ -20,7 +20,7 @@
           <button class="btn-custom" (click)="viewAllCampaigns()">
             View all
           </button>
-          <button class="btn-custom" (click)="toggleAddModal()">Add</button>
+          <button *ngIf="role === permission.procedurePlanner" class="btn-custom" (click)="toggleAddModal()">Add</button>
           <button class="btn-custom" (click)="toggleSearchModal()">
             Search
           </button>
@@ -71,9 +71,9 @@
               <td>{{ campaign.quantity }}</td>
               <td>{{ campaign.unitEffortDays }}</td>
               <td>
-                <button (click)="openEditModal(campaign)">Edit</button>
+                <button *ngIf="role === permission.procedurePlanner" (click)="openEditModal(campaign)">Edit</button>
                 <button (click)="viewSchedule(campaign)">View Schedule</button>
-                <button (click)="openModal(campaign)">Delete</button>
+                <button *ngIf="role === permission.procedurePlanner" (click)="openModal(campaign)">Delete</button>
               </td>
             </tr>
           </tbody>
@@ -89,7 +89,7 @@
       <h3>Add Campaign</h3>
       <form (submit)="addCampaign()">
         <div class="form-group">
-          <label for="addPlanId">Plan ID (number)</label>
+          <label for="addPlanId">Plan ID</label>
           <input
             type="number"
             placeholder="Required"
@@ -104,7 +104,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="addProduct">Product (option)</label>
+          <label for="addProduct">Product</label>
           <select
             id="addProduct"
             name="product"
@@ -120,7 +120,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="addQuantity">Quantity (number)</label>
+          <label for="addQuantity">Quantity</label>
           <input
             type="number"
             placeholder="Required"
@@ -135,7 +135,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="addEffort">Unit Effort (Days) (number)</label>
+          <label for="addEffort">Unit Effort (Days)</label>
           <input
             type="number"
             placeholder="Required"
@@ -163,7 +163,7 @@
       <h3>{{titleEdit}}</h3>
       <form (submit)="saveEdit()">
         <div class="form-group">
-          <label for="editPlanId">Plan ID (number)</label>
+          <label for="editPlanId">Plan ID</label>
           <input
             type="number"
             placeholder="Required"
@@ -176,7 +176,7 @@
           <div *ngIf="errors.planId" class="error-message"> {{errors.planId}} </div>
         </div>
         <div class="form-group">
-          <label for="editProduct">Product (option)</label>
+          <label for="editProduct">Product</label>
           <select
             id="editProduct"
             name="product"
@@ -190,7 +190,7 @@
           <div *ngIf="errors.product" class="error-message"> {{errors.product}} </div>
         </div>
         <div class="form-group">
-          <label for="editQuantity">Quantity (number)</label>
+          <label for="editQuantity">Quantity</label>
           <input
             placeholder="Required"
             type="number"
@@ -203,7 +203,7 @@
           <div *ngIf="errors.quantity" class="error-message"> {{errors.quantity}} </div>
         </div>
         <div class="form-group">
-          <label for="editEffort">Unit Effort (Days) (number)</label>
+          <label for="editEffort">Unit Effort (Days)</label>
           <input
             type="number"
             placeholder="Required"
@@ -229,7 +229,7 @@
       <h3>Search Campaigns</h3>
       <form (submit)="performSearch()">
         <div class="form-group">
-          <label for="searchCampaignId">Campaign ID (number)</label>
+          <label for="searchCampaignId">Campaign ID</label>
           <input
             type="number"
             placeholder="Not required"
@@ -240,7 +240,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="searchPlanId">Plan ID (number)</label>
+          <label for="searchPlanId">Plan ID</label>
           <input
             type="number"
             placeholder="Not required"
@@ -251,7 +251,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="searchProduct">Product (option)</label>
+          <label for="searchProduct">Product</label>
           <select id="searchProduct" [(ngModel)]="searchCriteria.product" name="product" class="form-control">
             <option [ngValue]="null">--Not required--</option>
             <option *ngFor="let prod of products" [ngValue]="prod">
@@ -274,14 +274,6 @@
         <button (click)="confirmDelete()">Yes</button>
         <button (click)="closeModal()">No</button>
       </div>
-    </div>
-  </div>
-
-  <!-- Error message modal -->
-  <div class="modal" [ngClass]="{ show: showError }">
-    <div class="modal-content">
-      <span class="close" (click)="closeError()">&times;</span>
-      <p>This campaign has children, you need to delete them first.</p>
     </div>
   </div>
 

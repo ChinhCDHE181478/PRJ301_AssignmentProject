@@ -1,9 +1,10 @@
 import { Role } from "./role";
 
-export interface AccountResponse{
+export interface AccountRequest{
     userId: number | null,
     username: string | null,
+    password: string | null,
     employeeId: number | null,
-    role: Role[],
+    role: Role | null,
     status: string | null
 }

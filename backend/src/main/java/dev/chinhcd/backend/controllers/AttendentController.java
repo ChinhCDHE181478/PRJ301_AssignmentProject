@@ -1,7 +1,8 @@
-package dev.chinhcd.backend.controller;
+package dev.chinhcd.backend.controllers;
 
 import dev.chinhcd.backend.dtos.requests.AttendentRequest;
 import dev.chinhcd.backend.dtos.responses.AttendentResponse;
+import dev.chinhcd.backend.dtos.responses.MessageResponse;
 import dev.chinhcd.backend.service.InterfaceService.AttendentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,6 @@ public class AttendentController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteAttendent(@PathVariable int id) {
         attendentService.deleteAttendent(id);
-        return ResponseEntity.ok("Deleted successfully");
+        return ResponseEntity.ok(MessageResponse.builder().message("Deleted successfully").build());
     }
 }

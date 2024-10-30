@@ -9,6 +9,7 @@ import { PlanCampaignsComponent } from './app/components/plan-campaigns/plan-cam
 import { ScheduleCampaignsComponent } from './app/components/schedule-campaigns/schedule-campaigns.component';
 import { WorkerSchedulesComponent } from './app/components/worker-schedules/worker-schedules.component';
 import { EmployeeViewComponent } from './app/components/employee-view/employee-view.component';
+import { AppComponent } from './app/app.component';
 
-bootstrapApplication(WorkerSchedulesComponent, appConfig)
+bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err));

@@ -6,31 +6,44 @@ import { PlanCampaignsComponent } from './components/plan-campaigns/plan-campaig
 import { ScheduleCampaignsComponent } from './components/schedule-campaigns/schedule-campaigns.component';
 import { WorkerSchedulesComponent } from './components/worker-schedules/worker-schedules.component';
 import { LoginComponent } from './components/login/login.component';
+import { HeaderComponent } from './components/header/header.component';
+import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
     {
-        path: 'account-managerment',
-        component: AccountManagermentComponent
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full'
     },
     {
-        path: 'production-plans',
-        component: ProductionPlansComponent
+        path: 'account',
+        component: AccountManagermentComponent,
+        canActivate: [authGuard]
     },
     {
-        path: 'employee-view',
-        component: EmployeeViewComponent
+        path: 'plan',
+        component: ProductionPlansComponent,
+        canActivate: [authGuard]
     },
     {
-        path: 'plan-campaigns',
-        component: PlanCampaignsComponent
+        path: 'employee',
+        component: EmployeeViewComponent,
+        canActivate: [authGuard]
     },
     {
-        path: 'schedule-campaigns',
-        component: ScheduleCampaignsComponent
+        path: 'campaign',
+        component: PlanCampaignsComponent,
+        canActivate: [authGuard]
     },
     {
-        path: 'worker-schedules',
-        component: WorkerSchedulesComponent
+        path: 'schedule',
+        component: ScheduleCampaignsComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'worker',
+        component: WorkerSchedulesComponent,
+        canActivate: [authGuard]
     },
     {
         path: 'login',

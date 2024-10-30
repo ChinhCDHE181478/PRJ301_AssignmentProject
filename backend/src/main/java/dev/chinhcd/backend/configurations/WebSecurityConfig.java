@@ -9,20 +9,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Configuration
@@ -38,8 +37,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        Set<Feature> features = featureService.getAllFeatures();
-
+        List<Feature> features = featureService.getAllFeatures();
         log.info(features.toString());
 
         http.csrf(AbstractHttpConfigurer::disable)
@@ -50,15 +48,24 @@ public class WebSecurityConfig {
                             .requestMatchers(String.format("%s/roles/all", apiPrefix)).permitAll()
                             .requestMatchers(String.format("%s/shifts/all", apiPrefix)).permitAll()
                             .requestMatchers(String.format("%s/users/all", apiPrefix)).permitAll()
-                            .requestMatchers(String.format("%s/departments/all", apiPrefix)).permitAll();
+                            .requestMatchers(String.format("%s/departments/all", apiPrefix)).permitAll()
+                            .requestMatchers(String.format("%s/products/all", apiPrefix)).permitAll();
 
                     if (!features.isEmpty()) {
-                        features.forEach(feature -> {
-                            requests.requestMatchers(HttpMethod.valueOf(feature.getMethod().toUpperCase()), feature.getPath())
-                                    .hasAnyRole(feature.getRole().getRoleName().toUpperCase());
-                        });
+                        Map<String, List<String>> groupedFeatures = features.stream()
+                                .collect(Collectors.groupingBy(
+                                        feature -> feature.getMethod().toUpperCase() + ":" + feature.getPath(),
+                                        Collectors.mapping(feature -> feature.getRole().getRoleName().toUpperCase(), Collectors.toList())
+                                ));
 
-                        requests.anyRequest().authenticated();
+                        // Apply authorization rules for each group
+                        groupedFeatures.forEach((methodPath, roles) -> {
+                            String[] parts = methodPath.split(":");
+                            HttpMethod method = HttpMethod.valueOf(parts[0]);
+                            String path = parts[1];
+                            requests.requestMatchers(method, path)
+                                    .hasAnyRole(roles.toArray(new String[0]));
+                        });
                     }
 
                 }).cors(httpSecurityCorsConfigurer -> {

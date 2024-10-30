@@ -25,7 +25,7 @@
         </div>
 
         <div>
-          <div style="margin-top: 20px; font-weight: bolder">
+          <div *ngIf="schedule" style="margin-top: 20px; font-weight: bolder">
             Current branch
           </div>
 
@@ -79,6 +79,7 @@
                 <td>
                   <button (click)="openEditModal(attendent)">Edit</button>
                   <button (click)="openModal(attendent)">Delete</button>
+                  <button (click)="viewEmployee(attendent)">View Employee</button>
                 </td>
               </tr>
             </tbody>
@@ -329,3 +330,5 @@
     <app-footer></app-footer>
   </div>
 </div>
+
+<router-outlet></router-outlet>

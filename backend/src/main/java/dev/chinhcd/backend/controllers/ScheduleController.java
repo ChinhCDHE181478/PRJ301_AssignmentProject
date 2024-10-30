@@ -1,6 +1,7 @@
-package dev.chinhcd.backend.controller;
+package dev.chinhcd.backend.controllers;
 
 import dev.chinhcd.backend.dtos.requests.ScheduleRequest;
+import dev.chinhcd.backend.dtos.responses.MessageResponse;
 import dev.chinhcd.backend.dtos.responses.ScheduleResponse;
 import dev.chinhcd.backend.service.ScheduleServiceImpl;
 import lombok.AllArgsConstructor;
@@ -47,8 +48,12 @@ public class ScheduleController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteSchedule(@PathVariable int id){
-        scheduleService.deleteSchedule(id);
-        return ResponseEntity.ok("Deleted successfully");
+        try{
+            scheduleService.deleteSchedule(id);
+            return ResponseEntity.ok(MessageResponse.builder().message("Deleted successfully").build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

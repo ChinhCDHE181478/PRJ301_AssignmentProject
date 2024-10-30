@@ -8,6 +8,7 @@ import dev.chinhcd.backend.models.PlanCampaign;
 import dev.chinhcd.backend.models.ScheduleCampaign;
 import dev.chinhcd.backend.models.Shift;
 import dev.chinhcd.backend.repository.ScheduleRepository;
+import dev.chinhcd.backend.repository.WorkerRepository;
 import dev.chinhcd.backend.service.InterfaceService.ScheduleService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -29,6 +30,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final CampaignServiceImpl campaignService;
     private final ShiftServiceImpl shiftService;
+    private final WorkerRepository workerRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -161,7 +163,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional
     @Override
-    public void deleteSchedule(int id) {
+    public void deleteSchedule(int id) throws Exception {
+        if(!workerRepository.findByScheduleId(id).isEmpty()) {
+            throw new Exception("Cannot delete because it have children, you must delete children fist");
+        }
         scheduleRepository.deleteById(id);
     }
 

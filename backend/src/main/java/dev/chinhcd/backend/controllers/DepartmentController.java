@@ -1,4 +1,4 @@
-package dev.chinhcd.backend.controller;
+package dev.chinhcd.backend.controllers;
 
 import dev.chinhcd.backend.dtos.responses.DepartmentResponse;
 import dev.chinhcd.backend.service.DepartmentServiceImpl;

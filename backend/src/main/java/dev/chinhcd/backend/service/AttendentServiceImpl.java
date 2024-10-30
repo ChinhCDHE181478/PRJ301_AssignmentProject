@@ -55,6 +55,7 @@ public class AttendentServiceImpl implements AttendentService {
         return convertToAttendentResponse(attendent);
     }
 
+    @Transactional
     @Override
     public AttendentResponse updateAttendent(AttendentRequest request) throws DataNotFoundException {
 
@@ -84,12 +85,14 @@ public class AttendentServiceImpl implements AttendentService {
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<AttendentResponse> getAllAttendents() {
         return attendentRepository.findAll().stream()
                 .map(this::convertToAttendentResponse).toList();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<AttendentResponse> searchAttendent(AttendentRequest request) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -122,6 +125,7 @@ public class AttendentServiceImpl implements AttendentService {
         return results.stream().map(this::convertToAttendentResponse).toList();
     }
 
+    @Transactional
     @Override
     public void deleteAttendent(int id) {
         attendentRepository.deleteById(id);

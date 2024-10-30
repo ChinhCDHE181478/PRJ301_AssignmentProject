@@ -2,6 +2,7 @@ package dev.chinhcd.backend.service.InterfaceService;
 
 import dev.chinhcd.backend.dtos.requests.AccountRequest;
 import dev.chinhcd.backend.dtos.responses.AccountResponse;
+import dev.chinhcd.backend.dtos.responses.UserLoginResponse;
 import dev.chinhcd.backend.exceptions.DataNotFoundException;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface AccountService {
 
     void deleteAccountById(int id);
 
-    String login(String username, String password) throws DataNotFoundException;
+    UserLoginResponse login(String username, String password) throws DataNotFoundException;
 }

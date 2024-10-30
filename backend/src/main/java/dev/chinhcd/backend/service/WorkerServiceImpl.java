@@ -6,6 +6,7 @@ import dev.chinhcd.backend.service.InterfaceService.WorkerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,5 +17,10 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public Optional<WorkerSchedule> getWorker(int id) {
         return workerRepository.findById(id);
+    }
+
+    @Override
+    public List<WorkerSchedule> getByScheduleId(int id) {
+        return workerRepository.findByScheduleId(id);
     }
 }

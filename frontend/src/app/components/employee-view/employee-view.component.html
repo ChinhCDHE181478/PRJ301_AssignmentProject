@@ -38,8 +38,33 @@
             <tr>
               <td>{{ account.username }}</td>
               <td>{{ account.employeeId }}</td>
-              <td>{{ getRolesAsString(account.role) }}</td>
+              <td>{{ account.role?.name }}</td>
               <td>{{ account.status }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table *ngIf="attendent !== null" class="table">
+          <thead>
+            <tr class="table-header">
+              <th>Work ID</th>
+              <th>Schedule ID</th>
+              <th>Employee ID</th>
+              <th>Employee Name</th>
+              <th>Planned Quantity</th>
+              <th>Actual Quantity</th>
+              <th>Alpha</th>
+            </tr>
+          </thead>
+          <tbody class="table-body">
+            <tr>
+              <td>{{ attendent.worker.workerId }}</td>
+              <td>{{ attendent.worker.scheduleId }}</td>
+              <td>{{ attendent.worker.employee.employeeId }}</td>
+              <td>{{ attendent.worker.employee.employeeName }}</td>
+              <td>{{ attendent.worker.quantity }}</td>
+              <td>{{ attendent.quantity }}</td>
+              <td>{{ attendent.alpha }}</td>
             </tr>
           </tbody>
         </table>
@@ -61,7 +86,7 @@
               <td>{{ employee.employeeName }}</td>
               <td>{{ employee.department?.departmentName }}</td>
               <th>
-                <button (click)="viewDetailEmployee(employee)">View</button>
+                <button *ngIf="role === permission.accountManager" (click)="viewDetailEmployee(employee)">View</button>
               </th>
             </tr>
           </tbody>
@@ -129,3 +154,5 @@
     <app-footer></app-footer>
   </div>
 </div>
+
+<router-outlet></router-outlet>

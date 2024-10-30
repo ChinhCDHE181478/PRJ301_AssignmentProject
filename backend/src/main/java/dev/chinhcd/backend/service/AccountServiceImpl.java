@@ -5,6 +5,7 @@ import dev.chinhcd.backend.configurations.AccountManagerConfig;
 import dev.chinhcd.backend.dtos.requests.AccountRequest;
 import dev.chinhcd.backend.dtos.responses.AccountResponse;
 import dev.chinhcd.backend.dtos.responses.RoleResponse;
+import dev.chinhcd.backend.dtos.responses.UserLoginResponse;
 import dev.chinhcd.backend.exceptions.DataNotFoundException;
 import dev.chinhcd.backend.models.Account;
 import dev.chinhcd.backend.models.Employee;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -153,7 +155,9 @@ public class AccountServiceImpl implements AccountService {
                 .orElseThrow(() -> new DataNotFoundException("Role not found"));
 
         // Update password
-        existingAccount.setPassword(accountRequest.password());
+        if(accountRequest.password() != null && !accountRequest.password().isBlank()) {
+            existingAccount.setPassword(passwordEncoder.encode(accountRequest.password()));
+        }
 
         // Update status
         existingAccount.setStatus(accountRequest.status());
@@ -183,7 +187,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public String login(String username, String password) throws DataNotFoundException {
+    public UserLoginResponse login(String username, String password) throws DataNotFoundException {
 
         if (username.equals(accountManagerConfig.getUsername()) &&
                 password.equals(accountManagerConfig.getPassword())) {
@@ -192,25 +196,44 @@ public class AccountServiceImpl implements AccountService {
 
             authenticationManager.authenticate(authenticationToken);
 
+            Role role = roleService.findRoleById(accountManagerConfig.getRoleId())
+                    .orElseThrow(() -> new DataNotFoundException("Role not found"));
+
             // Tạo và trả về token cho accountManager
-            return jwtTokenUtil.generateToken(Account.builder()
+            String token = jwtTokenUtil.generateToken(Account.builder()
                     .username(accountManagerConfig.getUsername())
                     .password(accountManagerConfig.getPassword())
                     .build());
+
+            return UserLoginResponse.builder()
+                    .message("Login successful")
+                    .token(token)
+                    .role(role.getRoleName().toUpperCase())
+                    .build();
         }
 
         Account account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new DataNotFoundException("Invalid username or password."));
+                .orElseThrow(() -> new DataNotFoundException("Wrong username or password"));
+
+        if(account.getStatus().equals("Blocked")){
+            throw new DataNotFoundException("Account is blocked.");
+        }
 
         if (!passwordEncoder.matches(password, account.getPassword())) {
-            throw new BadCredentialsException("Wrong username or password.");
+            throw new BadCredentialsException("Wrong username or password");
         }
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
 
         authenticationManager.authenticate(authenticationToken);
 
-        return jwtTokenUtil.generateToken(account);
+        String token = jwtTokenUtil.generateToken(account);
+
+        return UserLoginResponse.builder()
+                .message("Login successful")
+                .token(token)
+                .role(account.getRole().getRoleName().toUpperCase())
+                .build();
     }
 
 }

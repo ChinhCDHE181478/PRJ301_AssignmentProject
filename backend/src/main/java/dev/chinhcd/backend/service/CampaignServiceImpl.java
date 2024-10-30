@@ -8,6 +8,7 @@ import dev.chinhcd.backend.models.PlanCampaign;
 import dev.chinhcd.backend.models.Product;
 import dev.chinhcd.backend.models.ProductionPlan;
 import dev.chinhcd.backend.repository.CampaignRepository;
+import dev.chinhcd.backend.repository.ScheduleRepository;
 import dev.chinhcd.backend.service.InterfaceService.CampaignService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -29,6 +30,7 @@ public class CampaignServiceImpl implements CampaignService {
     private final CampaignRepository campaignRepository;
     private final ProductServiceImpl productService;
     private final PlanServiceImpl planService;
+    private final ScheduleRepository scheduleRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -145,7 +147,10 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Transactional
     @Override
-    public void deleteCampaignById(int id) {
+    public void deleteCampaignById(int id) throws Exception {
+        if(!scheduleRepository.findByCampaignId(id).isEmpty()) {
+            throw new Exception("Cannot delete because it have children, you must delete children fist");
+        }
         campaignRepository.deleteById(id);
     }
 
@@ -154,4 +159,5 @@ public class CampaignServiceImpl implements CampaignService {
     public Optional<PlanCampaign> getCampaignById(int id) {
         return campaignRepository.findById(id);
     }
+
 }

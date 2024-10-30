@@ -21,6 +21,10 @@
     margin-left: auto; /* Đẩy mục "Log Out" về cuối dòng */
 }
 
+a{
+    cursor: pointer;
+}
+
 /* Di chuyển nút menu sang bên trái trên màn hình nhỏ */
 @media (max-width: 992px) {
     .navbar {

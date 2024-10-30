@@ -17,7 +17,7 @@ public interface PlanService {
 
     PlanResponse updatePlan(PlanRequest planRequest) throws DataNotFoundException;
 
-    void deletePlanById(int planId);
+    void deletePlanById(int planId) throws Exception;
 
     Optional<ProductionPlan> getProductionPlanById(int planId);
 }

@@ -18,7 +18,8 @@ public interface ScheduleService {
 
     ScheduleResponse updateSchedule(ScheduleRequest request) throws DataNotFoundException;
 
-    void deleteSchedule(int id);
+    void deleteSchedule(int id) throws Exception;
 
     Optional<ScheduleCampaign> getScheduleCampaign(int id);
+
 }

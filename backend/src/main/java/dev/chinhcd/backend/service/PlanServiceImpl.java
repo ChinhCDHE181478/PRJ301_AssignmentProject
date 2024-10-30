@@ -6,6 +6,7 @@ import dev.chinhcd.backend.dtos.responses.PlanResponse;
 import dev.chinhcd.backend.exceptions.DataNotFoundException;
 import dev.chinhcd.backend.models.Department;
 import dev.chinhcd.backend.models.ProductionPlan;
+import dev.chinhcd.backend.repository.CampaignRepository;
 import dev.chinhcd.backend.repository.PlanRepository;
 import dev.chinhcd.backend.service.InterfaceService.PlanService;
 import jakarta.persistence.EntityManager;
@@ -27,6 +28,7 @@ public class PlanServiceImpl implements PlanService {
     private final EntityManager entityManager;
     private final PlanRepository planRepository;
     private final DepartmentServiceImpl departmentService;
+    private final CampaignRepository campaignRepository;
 
     @Transactional(readOnly = true)
     @Override
@@ -142,9 +144,12 @@ public class PlanServiceImpl implements PlanService {
                 .build();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
-    public void deletePlanById(int planId) {
+    public void deletePlanById(int planId) throws Exception {
+        if(!campaignRepository.findByPlanId(planId).isEmpty()){
+            throw new Exception("Cannot delete because it have children, you must delete children fist");
+        }
         planRepository.deleteById(planId);
     }
 

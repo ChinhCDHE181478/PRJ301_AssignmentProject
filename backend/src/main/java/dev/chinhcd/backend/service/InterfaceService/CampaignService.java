@@ -17,7 +17,8 @@ public interface CampaignService {
 
     CampaignResponse updateCampaign(CampaignRequest request) throws DataNotFoundException;
 
-    void deleteCampaignById(int id);
+    void deleteCampaignById(int id) throws Exception;
 
     Optional<PlanCampaign> getCampaignById(int id);
+
 }

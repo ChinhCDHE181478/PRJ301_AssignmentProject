@@ -5,10 +5,7 @@
 
   <div class="container-fluid table-container">
     <div class="row justify-content-center">
-      <!-- Thêm class justify-content-center -->
-
       <div class="col-md-10">
-        <!-- Thêm một cột để giới hạn chiều rộng bảng -->
         <div
           style="
             font-size: 25px;
@@ -20,8 +17,14 @@
           Production Plans
         </div>
         <div class="button-container">
-          <button class="btn-custom" (click)="viewAllPlans()">View all</button>
-          <button class="btn-custom" (click)="toggleAddModal()">Add</button>
+          <button class="btn-custom" (click)="all()">View all</button>
+          <button
+            *ngIf="role === permission.procedurePlanner"
+            class="btn-custom"
+            (click)="toggleAddModal()"
+          >
+            Add
+          </button>
           <button class="btn-custom" (click)="toggleSearchModal()">
             Search
           </button>
@@ -46,9 +49,19 @@
               <td>{{ plan.endDate | date : "yyyy-MM-dd" }}</td>
               <td>{{ plan.department?.departmentName }}</td>
               <td>
-                <button (click)="openEditModal(plan)">Edit</button>
+                <button
+                  *ngIf="role === permission.procedurePlanner"
+                  (click)="openEditModal(plan)"
+                >
+                  Edit
+                </button>
                 <button (click)="viewCampaign(plan)">View Campaign</button>
-                <button (click)="openModal(plan)">Delete</button>
+                <button
+                  *ngIf="role === permission.procedurePlanner"
+                  (click)="openModal(plan)"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           </tbody>
@@ -172,7 +185,7 @@
   <div [ngClass]="{ show: isEditModalOpen }" class="modal">
     <div class="modal-content">
       <span class="close" (click)="closeEditModal()">&times;</span>
-      <h3>{{titleEdit}}</h3>
+      <h3>{{ titleEdit }}</h3>
       <form (submit)="saveEdit()">
         <div class="form-group">
           <label for="editStartDate">Start Date</label>
@@ -236,15 +249,9 @@
     </div>
   </div>
 
-  <!-- Error message modal -->
-  <div class="modal" [ngClass]="{ show: showError }">
-    <div class="modal-content">
-      <span class="close" (click)="closeError()">&times;</span>
-      <p>This plan has children, you need to delete them first.</p>
-    </div>
-  </div>
-
   <div>
     <app-footer></app-footer>
   </div>
 </div>
+
+<router-outlet></router-outlet>

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +18,8 @@ public class FeatureServiceImpl implements FeatureService {
 
     @Transactional(readOnly = true)
     @Override
-    public Set<Feature> getAllFeatures() {
-        return new HashSet<>(featureRepository.findAll());
+    public List<Feature> getAllFeatures() {
+        return featureRepository.findAll();
     }
 
 }

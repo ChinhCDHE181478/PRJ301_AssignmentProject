@@ -1,4 +1,4 @@
-package dev.chinhcd.backend.controller;
+package dev.chinhcd.backend.controllers;
 
 import dev.chinhcd.backend.dtos.responses.RoleResponse;
 import dev.chinhcd.backend.service.RoleServiceImpl;

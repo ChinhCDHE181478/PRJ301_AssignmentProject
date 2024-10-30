@@ -17,15 +17,24 @@
           Schedule Plans
         </div>
         <div class="button-container">
-          <button class="btn-custom" (click)="toggleAddModal()">Add</button>
+          <button class="btn-custom" (click)="viewAll()">View All</button>
+          <button
+            *ngIf="role === permission.procedurePlanner"
+            class="btn-custom"
+            (click)="toggleAddModal()"
+          >
+            Add
+          </button>
           <button class="btn-custom" (click)="toggleSearchModal()">
             Search
           </button>
-          <button class="btn-custom" (click)="viewAll()">View All</button>
         </div>
 
         <div>
-          <div style="margin-top: 20px; font-weight: bolder">
+          <div
+            *ngIf="campaign !== null"
+            style="margin-top: 20px; font-weight: bolder"
+          >
             Current branch
           </div>
 
@@ -40,7 +49,11 @@
               </tr>
             </thead>
             <tbody class="table-body plan-campaign-body">
-              <!-- Dữ liệu sẽ được chèn vào đây -->
+              <td>{{ campaign.campaignId }}</td>
+              <td>{{ campaign.planId }}</td>
+              <td>{{ campaign.product?.productName }}</td>
+              <td>{{ campaign.quantity }}</td>
+              <td>{{ campaign.unitEffortDays }}</td>
             </tbody>
           </table>
         </div>
@@ -59,17 +72,32 @@
           </thead>
           <tbody class="table-body">
             <tr *ngFor="let schedule of schedules; let i = index">
-                <td>{{(i+1)}}</td>
-                <td>{{schedule.scheduleId}}</td>
-                <td>{{schedule.campaignId}}</td>
-                <td>{{schedule.date | date: "yyyy-MM-dd"}}</td>
-                <td>{{schedule.shift?.shiftName}}</td>
-                <td>{{schedule.quantity}}</td>
-                <td>
-                    <button (click)="openEditModal(schedule)">Edit</button>
-                    <button (click)="viewWorker(schedule)">View worker schedule</button>
-                    <button (click)="openModal(schedule)">Delete</button>
-                </td>
+              <td>{{ i + 1 }}</td>
+              <td>{{ schedule.scheduleId }}</td>
+              <td>{{ schedule.campaignId }}</td>
+              <td>{{ schedule.date | date : "yyyy-MM-dd" }}</td>
+              <td>{{ schedule.shift?.shiftName }}</td>
+              <td>{{ schedule.quantity }}</td>
+              <td>
+                <button
+                  *ngIf="role === permission.procedurePlanner"
+                  (click)="openEditModal(schedule)"
+                >
+                  Edit
+                </button>
+                <button
+                  *ngIf="role === permission.workerScheduleManager"
+                  (click)="viewWorker(schedule)"
+                >
+                  View worker schedule
+                </button>
+                <button
+                  *ngIf="role === permission.procedurePlanner"
+                  (click)="openModal(schedule)"
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -89,7 +117,7 @@
       <h3>Add Schedule</h3>
       <form (ngSubmit)="addRecord()">
         <div class="form-group">
-          <label for="addScheduleID">Schedule ID (number)</label>
+          <label for="addScheduleID">Schedule ID</label>
           <input
             type="number"
             placeholder="Required"
@@ -99,10 +127,12 @@
             class="form-control"
             required
           />
-          <div *ngIf="errors.scheduleId" class="error-message">{{errors.scheduleId}}</div>
+          <div *ngIf="errors.scheduleId" class="error-message">
+            {{ errors.scheduleId }}
+          </div>
         </div>
         <div class="form-group">
-          <label for="addCampaignID">Campaign ID (number)</label>
+          <label for="addCampaignID">Campaign ID</label>
           <input
             type="number"
             placeholder="Required"
@@ -112,7 +142,9 @@
             class="form-control"
             required
           />
-          <div *ngIf="errors.campaignId" class="error-message">{{errors.campaignId}}</div>
+          <div *ngIf="errors.campaignId" class="error-message">
+            {{ errors.campaignId }}
+          </div>
         </div>
         <div class="form-group">
           <label for="addDate">Date</label>
@@ -125,10 +157,10 @@
             class="form-control"
             required
           />
-          <div *ngIf="errors.date" class="error-message">{{errors.date}}</div>
+          <div *ngIf="errors.date" class="error-message">{{ errors.date }}</div>
         </div>
         <div class="form-group">
-          <label for="editShift">Shift (option)</label>
+          <label for="editShift">Shift</label>
           <select
             [(ngModel)]="newSchedule.shift"
             name="shift"
@@ -139,10 +171,12 @@
               {{ shift.shiftName }}
             </option>
           </select>
-          <div *ngIf="errors.shift" class="error-message">{{errors.shift}}</div>
+          <div *ngIf="errors.shift" class="error-message">
+            {{ errors.shift }}
+          </div>
         </div>
         <div class="form-group">
-          <label for="addQuantity">Quantity (number)</label>
+          <label for="addQuantity">Quantity</label>
           <input
             type="number"
             placeholder="Required"
@@ -152,7 +186,9 @@
             class="form-control"
             required
           />
-          <div *ngIf="errors.quantity" class="error-message">{{errors.quantity}}</div>
+          <div *ngIf="errors.quantity" class="error-message">
+            {{ errors.quantity }}
+          </div>
         </div>
         <div class="form-buttons" style="margin-top: 10px">
           <button type="submit" class="btn-custom">Add</button>
@@ -168,7 +204,7 @@
       <h3>Search Schedule</h3>
       <form (submit)="performSearch()">
         <div class="form-group">
-          <label for="searchScheduleID">Schedule ID (number)</label>
+          <label for="searchScheduleID">Schedule ID</label>
           <input
             type="number"
             name="scheduleId"
@@ -179,7 +215,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="searchCampaignID">Campaign ID (number)</label>
+          <label for="searchCampaignID">Campaign ID</label>
           <input
             type="text"
             name="campaignId"
@@ -200,7 +236,7 @@
           />
         </div>
         <div class="form-group">
-          <label for="editShift">Shift (option)</label>
+          <label for="editShift">Shift</label>
           <select
             [(ngModel)]="searchCiteria.shift"
             name="shift"
@@ -211,17 +247,6 @@
               {{ shift.shiftName }}
             </option>
           </select>
-        </div>
-        <div class="form-group">
-          <label for="searchQuantity">Quantity (number)</label>
-          <input
-            type="number"
-            placeholder="Not required"
-            id="searchQuantity"
-            name="quantity"
-            [(ngModel)]="searchCiteria.quantity"
-            class="form-control"
-          />
         </div>
         <div class="form-buttons" style="margin-top: 10px">
           <button type="submit" class="btn-custom">Search</button>
@@ -237,7 +262,7 @@
       <h3>{{ titleEdit }}</h3>
       <form (submit)="saveEdit()">
         <div class="form-group">
-          <label for="editCampaignID">Campaign ID (number)</label>
+          <label for="editCampaignID">Campaign ID</label>
           <input
             type="number"
             id="editCampaignID"
@@ -246,7 +271,9 @@
             class="form-control"
             required
           />
-          <div *ngIf="errors.campaignId" class="error-message">{{errors.campaignId}}</div>
+          <div *ngIf="errors.campaignId" class="error-message">
+            {{ errors.campaignId }}
+          </div>
         </div>
         <div class="form-group">
           <label for="editDate">Date</label>
@@ -258,10 +285,10 @@
             class="form-control"
             required
           />
-          <div *ngIf="errors.date" class="error-message">{{errors.date}}</div>
+          <div *ngIf="errors.date" class="error-message">{{ errors.date }}</div>
         </div>
         <div class="form-group">
-          <label for="editShift">Shift (option)</label>
+          <label for="editShift">Shift</label>
           <select
             [(ngModel)]="editSchedule.shift"
             name="shift"
@@ -272,10 +299,12 @@
               {{ shift.shiftName }}
             </option>
           </select>
-          <div *ngIf="errors.shift" class="error-message">{{errors.shift}}</div>
+          <div *ngIf="errors.shift" class="error-message">
+            {{ errors.shift }}
+          </div>
         </div>
         <div class="form-group">
-          <label for="editQuantity">Quantity (number)</label>
+          <label for="editQuantity">Quantity</label>
           <input
             type="number"
             placeholder="Not required"
@@ -285,7 +314,9 @@
             class="form-control"
             required
           />
-          <div *ngIf="errors.quantity" class="error-message">{{errors.quantity}}</div>
+          <div *ngIf="errors.quantity" class="error-message">
+            {{ errors.quantity }}
+          </div>
         </div>
         <div class="form-buttons" style="margin-top: 10px">
           <button type="submit" class="btn-custom">Save Changes</button>
@@ -302,14 +333,6 @@
         <button (click)="confirmDelete()">Yes</button>
         <button (click)="closeModal()">No</button>
       </div>
-    </div>
-  </div>
-
-  <!-- Error message modal -->
-  <div class="modal" [ngClass]="{ show: showError }">
-    <div class="modal-content">
-      <span class="close" (click)="closeError()">&times;</span>
-      <p>This schedule has children, you need to delete them first.</p>
     </div>
   </div>
 

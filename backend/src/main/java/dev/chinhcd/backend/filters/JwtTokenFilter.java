@@ -50,6 +50,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                log.info("userDetail: {}", userDetails);
 
                 if (jwtTokenUtil.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -60,9 +61,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-
         }
     }
 

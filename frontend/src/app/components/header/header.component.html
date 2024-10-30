@@ -1,17 +1,76 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand web-name" href="#">Production Management</a>
-    <button class="navbar-toggler" type="button" (click)="toggleNavbar()" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div [ngClass]="{'show': isNavbarOpen}" class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link" href="#">Production plans</a>
-            <a class="nav-item nav-link" href="#">Plan campaigns</a>
-            <a class="nav-item nav-link" href="#">Schedule campaigns</a>
-            <a class="nav-item nav-link" href="#">Worker schedule</a>
-            <a class="nav-item nav-link" href="#">Attendent</a>
-            <a class="nav-item nav-link" href="#">View employee</a>
-            <a class="nav-item nav-link" href="#">Log Out</a>
-        </div>
+  <a
+    *ngIf="role !== permission.accountManager"
+    routerLink="/plan"
+    class="navbar-brand web-name"
+    >Production Management</a
+  >
+  <a
+    *ngIf="role === permission.accountManager"
+    routerLink="/account"
+    class="navbar-brand web-name"
+    >Account Managerment</a
+  >
+  <button
+    class="navbar-toggler"
+    type="button"
+    (click)="toggleNavbar()"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div
+    [ngClass]="{ show: isNavbarOpen }"
+    class="collapse navbar-collapse"
+    id="navbarNavAltMarkup"
+  >
+    <div class="navbar-nav">
+      <a
+        *ngIf="role !== permission.accountManager"
+        class="nav-item nav-link"
+        routerLink="/plan"
+        >Production plans</a
+      >
+      <a
+        *ngIf="role !== permission.accountManager"
+        class="nav-item nav-link"
+        routerLink="/campaign"
+        >Plan campaigns</a
+      >
+      <a
+        *ngIf="role !== permission.accountManager"
+        class="nav-item nav-link"
+        routerLink="/schedule"
+        >Schedule campaigns</a
+      >
+      <a
+        *ngIf="role === permission.workerScheduleManager"
+        class="nav-item nav-link"
+        routerLink="/worker"
+        >Worker schedule</a
+      >
+      <a
+        *ngIf="role === permission.accountManager"
+        class="nav-item nav-link"
+        routerLink="/account"
+        >Account</a
+      >
+      <a
+        *ngIf="
+          role === permission.accountManager ||
+          role === permission.workerScheduleManager
+        "
+        class="nav-item nav-link"
+        routerLink="/employee"
+        >View employee</a
+      >
+      <a class="nav-item nav-link" (click)="logOut()">Log Out</a>
     </div>
+  </div>
 </nav>
+
+<router-outlet></router-outlet>

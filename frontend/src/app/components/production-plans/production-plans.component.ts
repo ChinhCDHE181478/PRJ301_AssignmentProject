@@ -1,192 +1,179 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FooterComponent } from "../footer/footer.component";
-import { HeaderComponent } from "../header/header.component";
-import { FormsModule } from "@angular/forms"
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FooterComponent } from '../footer/footer.component';
+import { HeaderComponent } from '../header/header.component';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Plan } from '../../common/plan';
-import { Department } from '../../common/department';
+import { Plan } from '../../dto/plan';
+import { Department } from '../../dto/department';
+import { Router, RouterOutlet } from '@angular/router';
+import { DepartmentService } from '../../service/department.service';
+import { PlanService } from '../../service/plan.service';
+import { MessageResponse } from '../../dto/messageResponse';
+import { permission } from '../../permission/permission';
+import { AuthStorageService } from '../../service/authStorage.service';
 
 @Component({
   selector: 'app-production-plans',
   standalone: true,
-  imports: [FooterComponent, HeaderComponent, FormsModule, CommonModule],
+  imports: [
+    FooterComponent,
+    HeaderComponent,
+    FormsModule,
+    CommonModule,
+    RouterOutlet
+  ],
   templateUrl: './production-plans.component.html',
-  styleUrl: './production-plans.component.scss'
+  styleUrl: './production-plans.component.scss',
 })
-export class ProductionPlansComponent {
+export class ProductionPlansComponent implements OnInit {
+  public permission = permission;
 
-  // === Predefined Data ===
-  departments: Department[] = [
-    { departmentId: 1, departmentName: 'Manufacturing' , departmentType: "WS"},
-    { departmentId: 2, departmentName: 'Logistics', departmentType: "WS" },
-    { departmentId: 3, departmentName: 'Quality Control', departmentType: "WS" },
-    { departmentId: 4, departmentName: 'R&D', departmentType: "WS" }
-  ];
+  role: string | null = null;
 
-  productionPlans: Plan[] = [
-    { planId: 1, startDate: new Date('2024-01-01'), endDate: new Date('2024-03-01'), department: this.departments[0] },
-    { planId: 2, startDate: new Date('2024-02-15'), endDate: new Date('2024-05-15'), department: this.departments[2] }
-  ];
+  departments: Department[] = [];
 
-  // === Modal Control Variables ===
+  productionPlans: Plan[] = [];
+
   isAddModalOpen: boolean = false;
   isSearchModalOpen: boolean = false;
   isEditModalOpen: boolean = false;
 
-  // === Models ===
-
-  // Model: New Plan
-  newPlan: Plan = { 
-    planId: null, 
-    startDate: null, 
-    endDate: null, 
-    department: null
+  newPlan: Plan = {
+    planId: null,
+    startDate: null,
+    endDate: null,
+    department: null,
   };
 
-  // Model: Search Criteria
-  searchCriteria: Plan = { 
-    planId: null, 
-    startDate: null, 
-    endDate: null, 
-    department: null
+  searchCriteria: Plan = {
+    planId: null,
+    startDate: null,
+    endDate: null,
+    department: null,
   };
 
-  // Model: Selected Plan
-  selectedPlan: Plan = { 
-    planId: null, 
-    startDate: null, 
-    endDate: null, 
-    department: null
+  selectedPlan: Plan = {
+    planId: null,
+    startDate: null,
+    endDate: null,
+    department: null,
   };
 
-  // === Methods Related to New Plan ===
+  titleEdit: string = '';
 
-  toggleAddModal(){
+  idDelete: number | null = null;
+  titleModalDelete: string = '';
+  isVisible: boolean = false;
+  showError: boolean = false;
+
+  errors: {
+    startDate: String | null;
+    endDate: string | null;
+    department: string | null;
+  } = {
+    startDate: null,
+    endDate: null,
+    department: null,
+  };
+
+  constructor(
+    private departmentService: DepartmentService,
+    private router: Router,
+    private planService: PlanService,
+    private authService: AuthStorageService
+  ) {}
+
+  ngOnInit(): void {
+    this.role = this.authService.getPermission();
+
+    this.allDept();
+
+    this.all();
+  }
+
+  toggleAddModal() {
     this.isAddModalOpen = !this.isAddModalOpen;
     this.resetErrors();
   }
 
-  // Add New Production Plan
   addProductionPlan() {
-    if(!this.validatePlan(this.newPlan)){
-        return;
+    if (!this.validatePlan(this.newPlan)) {
+      return;
     }
-    console.log('Adding new production plan:', this.newPlan);
-    // Add plan logic
+    this.create();
     this.toggleAddModal();
-    this.resetPlan(this.newPlan);
   }
 
-  // Reset New Plan
-  resetPlan(plan: Plan) { 
+  resetPlan(plan: Plan) {
     plan.planId = null;
     plan.startDate = null;
     plan.endDate = null;
     plan.department = null;
   }
 
-  // === Methods Related to Search Criteria ===
-
   toggleSearchModal() {
     this.isSearchModalOpen = !this.isSearchModalOpen;
   }
 
-  // Perform Search
   performSearch() {
-    console.log('Search Criteria:', this.searchCriteria);
-    // Search logic
+    this.search();
     this.toggleSearchModal();
   }
 
-  // === Methods Related to Selected Plan ===
-
-  titleEdit : string = "";
-
-  // Open Edit Modal
   openEditModal(plan: Plan) {
-    this.titleEdit = "Edit plan " + plan.planId;
+    this.titleEdit = 'Edit plan ' + plan.planId;
     this.selectedPlan = { ...plan };
     this.isEditModalOpen = true;
   }
 
-  // Close Edit Modal
   closeEditModal() {
     this.isEditModalOpen = false;
     this.resetErrors();
   }
 
-  // Save Edited Plan
   saveEdit() {
-    if (this.selectedPlan) {
-      if(!this.validatePlan(this.selectedPlan)){
-        return;
-      }
-      console.log('Updated Plan:', this.selectedPlan);
-      // Update logic
-    } 
+    if (!this.validatePlan(this.selectedPlan)) {
+      return;
+    }
+    this.update();
     this.closeEditModal();
   }
 
-
-  // === General Methods ===
-
-  // View All Plans
-  viewAllPlans() {
-    console.log('View all plans triggered.');
-        // Logic to fetch and display all production plans
-  }
-
-  // View Campaign
   viewCampaign(plan: Plan) {
     sessionStorage.setItem('plan', JSON.stringify(plan));
-    console.log('Redirecting to campaign view:', plan);
-    // Logic to navigate to the campaign page
+    this.router.navigateByUrl('campaign');
   }
 
-  delete(plan: Plan){
-    //delete if no child
-  }
-
-  errors: {
-    startDate: String | null,
-    endDate: string | null,
-    department: string | null
-  } = {
-    startDate: null,
-    endDate: null,
-    department: null
-  }
-
-  resetErrors(){
+  resetErrors() {
     this.errors = {
       startDate: null,
       endDate: null,
-      department: null
-    }
+      department: null,
+    };
   }
 
-  validatePlan(plan : Plan): boolean{
+  validatePlan(plan: Plan): boolean {
     let isValid = true;
-    
-    if(!plan.startDate){
-      this.errors.startDate = "Start date is required";
+
+    if (!plan.startDate) {
+      this.errors.startDate = 'Start date is required';
       isValid = false;
     } else {
       this.errors.startDate = null;
     }
 
-    if(!plan.endDate){
-      this.errors.endDate = "End date is required";
+    if (!plan.endDate) {
+      this.errors.endDate = 'End date is required';
       isValid = false;
-    } else if(plan.startDate && (plan.endDate < plan.startDate)) {
-      this.errors.endDate = "End date must equal or after the start date";
+    } else if (plan.startDate && plan.endDate < plan.startDate) {
+      this.errors.endDate = 'End date must equal or after the start date';
       isValid = false;
     } else {
       this.errors.endDate = null;
     }
 
-    if(plan.department){
-      this.errors.department = "Department is required"
+    if (!plan.department?.departmentId) {
+      this.errors.department = 'Department is required';
       isValid = false;
     } else {
       this.errors.department = null;
@@ -195,18 +182,8 @@ export class ProductionPlansComponent {
     return isValid;
   }
 
-
-
-
-  idDelete : number | null = null;
-  titleModalDelete: string = '';
-  isVisible: boolean = false;
-  showError: boolean = false;
-
-  @Output() deleteConfirmed: EventEmitter<void> = new EventEmitter<void>();
-
-  openModal(plan : Plan): void {
-    this.titleModalDelete = "Do you want to delete plan " + plan.planId;
+  openModal(plan: Plan): void {
+    this.titleModalDelete = 'Do you want to delete plan ' + plan.planId;
     this.idDelete = plan.planId;
     this.isVisible = true;
   }
@@ -216,21 +193,83 @@ export class ProductionPlansComponent {
     this.isVisible = false;
   }
 
-  confirmDelete(): void {
-    // Condition check here (example condition: always false for demonstration)
-    const canDelete = false; // Replace with actual condition check
-
-    if (canDelete) {
-      this.deleteConfirmed.emit();
-      this.closeModal();
-    } else {
-      this.closeModal();
-      this.showError = true;
+  confirmDelete() {
+    if (this.idDelete) {
+      this.delete(this.idDelete);
     }
+    this.closeModal();
   }
 
   closeError(): void {
     this.showError = false;
   }
 
+  allDept() {
+    this.departmentService.all().subscribe({
+      next: (resp: Department[]) => {
+        this.departments = resp;
+      },
+      error: (error: any) => {
+        console.log(error.error);
+      },
+    });
+  }
+
+  all() {
+    this.planService.all().subscribe({
+      next: (resp: Plan[]) => {
+        this.productionPlans = resp;
+      },
+      error: (error: any) => {
+        console.log(error.error);
+      },
+    });
+  }
+
+  search() {
+    this.planService.search(this.searchCriteria).subscribe({
+      next: (resp: Plan[]) => {
+        this.productionPlans = resp;
+      },
+      error: (error: any) => {
+        console.log(error.error);
+      },
+    });
+  }
+
+  create() {
+    this.planService.create(this.newPlan).subscribe({
+      next: (resp: Plan) => {
+        console.log("Created: " + resp);
+        this.all();
+      },
+      error: (error: any) => {
+        console.log(error.error);
+      },
+    });
+  }
+
+  update() {
+    this.planService.update(this.selectedPlan).subscribe({
+      next: (resp: Plan) => {
+        console.log("Updated: " + resp);
+        this.all();
+      },
+      error: (error: any) => {
+        console.log(error.error);
+      },
+    });
+  }
+
+  delete(id: number) {
+    this.planService.delete(id).subscribe({
+      next: (resp: MessageResponse) => {
+        this.all();
+        alert(resp.message);
+      },
+      error: (error: any) => {
+        alert(error.error);
+      },
+    });
+  }
 }
