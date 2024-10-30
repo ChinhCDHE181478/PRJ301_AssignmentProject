@@ -1,6 +1,7 @@
 package dev.chinhcd.backend.controllers;
 
 import dev.chinhcd.backend.dtos.requests.ScheduleRequest;
+import dev.chinhcd.backend.dtos.requests.ShiftRequest;
 import dev.chinhcd.backend.dtos.responses.MessageResponse;
 import dev.chinhcd.backend.dtos.responses.ScheduleResponse;
 import dev.chinhcd.backend.service.ScheduleServiceImpl;
@@ -8,7 +9,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("${api.prefix}/schedules")
@@ -22,8 +25,21 @@ public class ScheduleController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ScheduleResponse>> searchSchedule(@RequestBody ScheduleRequest request){
-        return ResponseEntity.ok(scheduleService.searchSchedule(request));
+    public ResponseEntity<List<ScheduleResponse>> searchSchedule(
+            @RequestParam Optional<Integer> scheduleId,
+            @RequestParam Optional<Integer> campId,
+            @RequestParam Optional<Date> date,
+            @RequestParam Optional<Integer> shiftid)
+    {
+        ScheduleRequest sche = ScheduleRequest.builder()
+                .scheduleId(scheduleId.orElse(null))
+                .campaignId(campId.orElse(null))
+                .date(date.orElse(null))
+                .shiftRequest(ShiftRequest.builder()
+                        .shiftId(shiftid.orElse(null))
+                        .build())
+                .build();
+        return ResponseEntity.ok(scheduleService.searchSchedule(sche));
     }
 
     @PostMapping("/create")

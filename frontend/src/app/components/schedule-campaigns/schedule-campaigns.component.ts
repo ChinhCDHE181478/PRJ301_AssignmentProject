@@ -119,6 +119,10 @@ export class ScheduleCampaignsComponent implements OnInit {
     if (!this.validateSchedule(this.newSchedule)) {
       return;
     }
+    if (this.campaign) {
+      this.campaign = null;
+      sessionStorage.removeItem('campaign');
+    }
     this.create();
     this.toggleAddModal();
     this.clearSchedule(this.newSchedule);
@@ -137,6 +141,10 @@ export class ScheduleCampaignsComponent implements OnInit {
   }
 
   performSearch() {
+    if (this.campaign) {
+      this.campaign = null;
+      sessionStorage.removeItem('campaign');
+    }
     this.search();
     this.toggleSearchModal();
   }
@@ -155,6 +163,10 @@ export class ScheduleCampaignsComponent implements OnInit {
   saveEdit() {
     if (!this.validateSchedule(this.editSchedule)) {
       return;
+    }
+    if (this.campaign) {
+      this.campaign = null;
+      sessionStorage.removeItem('campaign');
     }
     this.update();
     this.closeEditModal();
@@ -251,6 +263,10 @@ export class ScheduleCampaignsComponent implements OnInit {
   confirmDelete(): void {
     if (this.idDelete) {
       this.delete(this.idDelete);
+    }
+    if (this.campaign) {
+      this.campaign = null;
+      sessionStorage.removeItem('campaign');
     }
     this.all();
     this.closeModal();

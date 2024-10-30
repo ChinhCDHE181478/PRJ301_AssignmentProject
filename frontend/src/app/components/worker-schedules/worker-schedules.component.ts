@@ -134,6 +134,10 @@ export class WorkerSchedulesComponent implements OnInit {
     if (!this.validateAttendent(this.newAttendent)) {
       return;
     }
+    if (this.schedule) {
+      this.schedule = null;
+      sessionStorage.removeItem('schedule');
+    }
     this.create();
     this.toggleAddModal();
     this.resetAttendent(this.newAttendent);
@@ -156,6 +160,10 @@ export class WorkerSchedulesComponent implements OnInit {
   }
 
   performSearch() {
+    if (this.schedule) {
+      this.schedule = null;
+      sessionStorage.removeItem('schedule');
+    }
     this.search();
     this.toggleSearchModal();
   }
@@ -175,12 +183,19 @@ export class WorkerSchedulesComponent implements OnInit {
     if (!this.validateAttendent(this.editAttendent)) {
       return;
     }
+    if (this.schedule) {
+      this.schedule = null;
+      sessionStorage.removeItem('schedule');
+    }
     this.update();
     this.closeEditModal();
   }
 
   viewAll() {
-    sessionStorage.removeItem('schedule');
+    if (this.schedule) {
+      this.schedule = null;
+      sessionStorage.removeItem('schedule');
+    }
     this.all();
   }
 
@@ -271,6 +286,10 @@ export class WorkerSchedulesComponent implements OnInit {
   confirmDelete(): void {
     if (this.idDelete) {
       this.delete(this.idDelete);
+    }
+    if (this.schedule) {
+      this.schedule = null;
+      sessionStorage.removeItem('schedule');
     }
     this.all();
     this.closeModal();

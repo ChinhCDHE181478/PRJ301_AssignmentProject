@@ -41,11 +41,11 @@
             </thead>
             <tbody class="table-body plan-campaign-body">
               <tr>
-                <td>{{schedule.scheduleId}}</td>
-                <td>{{schedule.campaignId}}</td>
-                <td>{{schedule.date | date:"yyyy-MM-dd"}}</td>
-                <td>{{schedule.shift?.shiftName}}</td>
-                <td>{{schedule.quantity}}</td>
+                <td>{{ schedule.scheduleId }}</td>
+                <td>{{ schedule.campaignId }}</td>
+                <td>{{ schedule.date | date : "yyyy-MM-dd" }}</td>
+                <td>{{ schedule.shift?.shiftName }}</td>
+                <td>{{ schedule.quantity }}</td>
               </tr>
             </tbody>
           </table>
@@ -75,11 +75,13 @@
                 <td>{{ attendent.worker.employee.employeeName }}</td>
                 <td>{{ attendent.worker.quantity }}</td>
                 <td>{{ attendent.quantity }}</td>
-                <td>{{ attendent.alpha }}</td>
+                <td>{{ attendent.alpha | number: '1.1-1' }}</td>
                 <td>
                   <button (click)="openEditModal(attendent)">Edit</button>
                   <button (click)="openModal(attendent)">Delete</button>
-                  <button (click)="viewEmployee(attendent)">View Employee</button>
+                  <button (click)="viewEmployee(attendent)">
+                    View Employee
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -90,11 +92,7 @@
   </div>
 
   <!-- Add Record Modal -->
-  <div
-    class="modal"
-    [ngClass]="{ show: isAddModalOpen }"
-    id="addModal"
-  >
+  <div class="modal" [ngClass]="{ show: isAddModalOpen }" id="addModal">
     <div class="modal-content">
       <span class="close" (click)="toggleAddModal()">&times;</span>
       <h3>Add Worker Attendent</h3>
@@ -130,7 +128,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="addQuantity">Planned Quantit</label>
+          <label for="addQuantity">Planned Quantity</label>
           <input
             type="number"
             placeholder="Required"
@@ -313,7 +311,6 @@
       </form>
     </div>
   </div>
-
 
   <div class="modal" [ngClass]="{ show: isVisible }">
     <div class="modal-content">

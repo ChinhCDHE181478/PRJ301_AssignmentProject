@@ -137,6 +137,10 @@ export class PlanCampaignsComponent implements OnInit {
       return;
     }
     this.create();
+    if (this.plan) {
+      this.plan = null;
+      sessionStorage.removeItem('plan');
+    }
     this.toggleAddModal();
     this.resetCampaign(this.newCampaign);
   }
@@ -164,6 +168,10 @@ export class PlanCampaignsComponent implements OnInit {
     if (!this.validateCampaign(this.selectedCampaign)) {
       return;
     }
+    if (this.plan) {
+      this.plan = null;
+      sessionStorage.removeItem('plan');
+    }
     this.update();
     this.closeEditModal();
   }
@@ -174,6 +182,10 @@ export class PlanCampaignsComponent implements OnInit {
 
   performSearch() {
     this.search();
+    if (this.plan) {
+      this.plan = null;
+      sessionStorage.removeItem('plan');
+    }
     this.toggleSearchModal();
   }
 

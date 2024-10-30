@@ -96,6 +96,8 @@ export class AccountManagermentComponent implements OnInit {
   ngOnInit(): void {
     const dataEmp = sessionStorage.getItem('employee');
 
+    this.allRole();
+
     if (dataEmp) {
       this.employee = JSON.parse(dataEmp);
       if (this.employee?.employeeId) {
@@ -105,12 +107,6 @@ export class AccountManagermentComponent implements OnInit {
     } else {
       this.listAll();
     }
-
-    this.roleService.getAllRole().subscribe({
-      next: (response: Role[]) => {
-        this.roles = response;
-      },
-    });
   }
 
   clearAdd() {
@@ -132,13 +128,16 @@ export class AccountManagermentComponent implements OnInit {
 
   viewDetailAccount(account: AccountResponse) {
     sessionStorage.setItem('account', JSON.stringify(account));
-    sessionStorage.removeItem('employee');
     this.router.navigateByUrl('employee');
   }
 
   deleteAccount(account: AccountResponse) {
     if (account.userId) {
       this.delete(account.userId);
+    }
+    if (this.employee) {
+      this.employee = null;
+      sessionStorage.removeItem('employee');
     }
   }
 
@@ -153,6 +152,10 @@ export class AccountManagermentComponent implements OnInit {
     }
     this.create();
     this.toggleAddModal();
+    if (this.employee) {
+      this.employee = null;
+      sessionStorage.removeItem('employee');
+    }
     this.clearAdd();
   }
 
@@ -162,6 +165,10 @@ export class AccountManagermentComponent implements OnInit {
 
   performSearch() {
     this.search();
+    if (this.employee) {
+      this.employee = null;
+      sessionStorage.removeItem('employee');
+    }
     this.toggleSearchModal();
   }
 
@@ -179,11 +186,15 @@ export class AccountManagermentComponent implements OnInit {
 
   saveEdit() {
     this.update(this.selectedUser);
+    if (this.employee) {
+      this.employee = null;
+      sessionStorage.removeItem('employee');
+    }
     this.closeEditModal();
   }
 
   clearEdit() {
-    this.isEditModalOpen = false; // Close the modal
+    this.isEditModalOpen = false; 
     this.selectedUser = {
       userId: null,
       username: null,
@@ -265,11 +276,25 @@ export class AccountManagermentComponent implements OnInit {
     return regex.test(str);
   }
 
+  allRole() {
+    this.roleService.getAllRole().subscribe({
+      next: (response: Role[]) => {
+        this.roles = response;
+      },
+      error: (error: any) => {
+        console.log(error.error);
+      }
+    });
+  }
+
   listAll() {
     this.accountService.all().subscribe({
       next: (response: AccountResponse[]) => {
         this.accounts = response;
       },
+      error: (error: any) => {
+        console.log(error.error);
+      }
     });
   }
 
@@ -278,6 +303,9 @@ export class AccountManagermentComponent implements OnInit {
       next: (response: AccountResponse[]) => {
         this.accounts = response;
       },
+      error: (error: any) => {
+        console.log(error.error);
+      }
     });
   }
 
@@ -299,6 +327,9 @@ export class AccountManagermentComponent implements OnInit {
         alert(response.message);
         this.listAll();
       },
+      error: (error: any) => {
+        console.log(error.error);
+      }
     });
   }
 

@@ -102,6 +102,10 @@ export class EmployeeViewComponent implements OnInit {
   performSearch(event: Event) {
     event.preventDefault();
     this.search();
+    if (this.account) {
+      this.account = null;
+      sessionStorage.removeItem('account');
+    }
     this.toggleSearchModal();
   }
 
