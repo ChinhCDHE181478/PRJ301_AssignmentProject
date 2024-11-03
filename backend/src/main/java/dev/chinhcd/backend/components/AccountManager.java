@@ -1,18 +1,19 @@
-package dev.chinhcd.backend.configurations;
+package dev.chinhcd.backend.components;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+//bean, in Spring Container
+@Component
 @AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
-public class AccountManagerConfig {
+public class AccountManager {
     @Value("${accountManager.username}")
     private String username;
 

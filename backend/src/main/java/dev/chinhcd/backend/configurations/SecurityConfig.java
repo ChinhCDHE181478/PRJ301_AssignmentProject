@@ -1,5 +1,6 @@
 package dev.chinhcd.backend.configurations;
 
+import dev.chinhcd.backend.components.AccountManager;
 import dev.chinhcd.backend.models.Role;
 import dev.chinhcd.backend.repository.AccountRepository;
 import dev.chinhcd.backend.repository.RoleRepository;
@@ -27,7 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final AccountRepository accountRepository;
-    private final AccountManagerConfig accountManagerConfig;
+    private final AccountManager accountManagerConfig;
     private final RoleRepository roleRepository;
 
     @Bean

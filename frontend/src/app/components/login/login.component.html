@@ -8,12 +8,12 @@
     <form (submit)="login()">
       <div class="input-acccount">
         <div>Username</div>
-        <input type="text" id="username input" [(ngModel)]="userLogin.username" name="username" />
+        <input type="text" placeholder="username" id="username input" [(ngModel)]="userLogin.username" name="username" />
         <div *ngIf="errors.username" class="error-message">
           {{ errors.username }}
         </div>
         <div>Password</div>
-        <input type="text" id="password input" [(ngModel)]="userLogin.password" name="password" />
+        <input type="text" placeholder="password" id="password input" [(ngModel)]="userLogin.password" name="password" />
         <div *ngIf="errors.password" class="error-message">
           {{ errors.password }}
         </div>

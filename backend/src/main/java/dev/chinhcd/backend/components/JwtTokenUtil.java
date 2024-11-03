@@ -31,7 +31,9 @@ public class JwtTokenUtil {
 
     public String generateToken(Account account) {
         Map<String, Object> claims = new HashMap<>();
+
         //this.generateSecretKey();
+
         claims.put("username", account.getUsername());
         try{
             return Jwts.builder()
@@ -50,7 +52,7 @@ public class JwtTokenUtil {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    //only for test Secret key
+    //only for test Secret key // header.payload.signature
     private String generateSecretKey() {
         SecureRandom random = new SecureRandom();
         byte[] keyBytes = new byte[32]; //256 bit key
@@ -58,6 +60,7 @@ public class JwtTokenUtil {
         return Encoders.BASE64.encode(keyBytes);
     }
 
+    // extract claims (payload) - (object)
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignInKey())
@@ -66,6 +69,7 @@ public class JwtTokenUtil {
                 .getBody();
     }
 
+    //extract specific field of claims (subject, exp, ...)
     public <T> T extractClaims(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = this.extractAllClaims(token);
         return claimsResolver.apply(claims);
